@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import dev.truewinter.snowmail.inputs.Input;
 import dev.truewinter.snowmail.pojo.Views;
 import org.bson.codecs.pojo.annotations.BsonId;
-import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
 import java.util.HashMap;

@@ -82,7 +82,7 @@
                             <customTypeMappings>
                                 <mapping>org.bson.types.ObjectId:string</mapping>
                             </customTypeMappings>
-                            <outputFile>types/public.d.ts</outputFile>
+                            <outputFile>npm/types/public.d.ts</outputFile>
                             <outputKind>module</outputKind>
                         </configuration>
                     </execution>

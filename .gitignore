@@ -39,3 +39,7 @@ build/
 node_modules
 /data
 /.env
+
+# Auto generated types
+types/java.d.ts
+npm/types/public.d.ts
