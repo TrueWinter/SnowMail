@@ -7,7 +7,9 @@ public class TextAreaInput extends AbstractTextInput {
     private String cols;
     private String rows;
 
-    public TextAreaInput() {}
+    public TextAreaInput() {
+        super.setInputType(INPUT_TYPE);
+    }
 
     public String getCols() {
         return cols;
@@ -23,10 +25,5 @@ public class TextAreaInput extends AbstractTextInput {
 
     public void setRows(String rows) {
         this.rows = rows;
-    }
-
-    @Override
-    public String getInputType() {
-        return INPUT_TYPE;
     }
 }

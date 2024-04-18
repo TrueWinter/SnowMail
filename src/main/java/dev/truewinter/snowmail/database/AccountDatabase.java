@@ -2,13 +2,12 @@ package dev.truewinter.snowmail.database;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
-import dev.truewinter.snowmail.Account;
+import dev.truewinter.snowmail.pojo.objects.Account;
 import org.bson.Document;
 
 import java.util.ArrayList;

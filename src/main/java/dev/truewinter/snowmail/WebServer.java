@@ -7,11 +7,16 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.truewinter.snowmail.database.Database;
 import dev.truewinter.snowmail.inputs.*;
+import dev.truewinter.snowmail.pojo.Response;
+import dev.truewinter.snowmail.pojo.objects.Account;
+import dev.truewinter.snowmail.pojo.objects.Form;
+import dev.truewinter.snowmail.pojo.Views;
 import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.InternalServerErrorResponse;
 import io.javalin.http.NotFoundResponse;
 import io.javalin.http.UnauthorizedResponse;
+import org.bson.types.ObjectId;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -70,8 +75,7 @@ public class WebServer extends Thread {
             String password = data.get("password").asText();
 
             database.getAccountDatabase().getAccountIfPasswordIsCorrect(username, password).ifPresentOrElse(a -> {
-                ObjectMapper mapper = new ObjectMapper();
-                ObjectNode node = mapper.createObjectNode();
+                ObjectNode node = new ObjectMapper().createObjectNode();
                 node.put("token", JWT.create(username).toJwt());
                 ctx.json(node);
             }, () -> {
@@ -80,7 +84,7 @@ public class WebServer extends Thread {
         });
 
         server.get("/api/accounts", ctx -> {
-            ctx.json(database.getAccountDatabase().getAccounts());
+            ctx.json(new Response(database.getAccountDatabase().getAccounts(), Views.DashboardFull.class));
         });
 
         server.post("/api/accounts", ctx -> {
@@ -103,7 +107,6 @@ public class WebServer extends Thread {
             }
 
             Account account = new Account(username, password, false);
-            System.out.println(account);
             database.getAccountDatabase().createOrEditAccount(account);
 
             ctx.status(200);
@@ -111,7 +114,7 @@ public class WebServer extends Thread {
 
         server.get("/api/accounts/{username}", ctx -> {
             Optional<Account> account = database.getAccountDatabase().getAccount(ctx.pathParam("username"));
-            account.ifPresentOrElse(ctx::json, () -> {
+            account.ifPresentOrElse(a -> ctx.json(new Response(a, Views.DashboardFull.class)), () -> {
                 throw new NotFoundResponse("Account not found");
             });
         });
@@ -159,33 +162,24 @@ public class WebServer extends Thread {
         });
 
         server.get("/api/forms", ctx -> {
-            // Just provide a summary of the forms in this route, full data can be returned in the individual routes
-            ObjectMapper mapper = new ObjectMapper();
-            ArrayNode node = mapper.createArrayNode();
+            LinkedList<Form> forms = new LinkedList<>();
 
-            ObjectNode form1 = mapper.createObjectNode();
-            form1.put("id", "123401");
-            form1.put("name", "Test Form");
-            form1.put("email", "email@example.com");
+            Form form1 = new Form(new ObjectId("661eca4d752415374a2d0ffa"), "Test Form", "email@example.com", new HashMap<>(), new LinkedList<>());
 
-            ObjectNode form2 = mapper.createObjectNode();
-            form2.put("id", "123402");
-            form2.put("name", "Test Form 2");
-            form2.put("email", "email2@example.com");
+            HashMap<String, String> form2Metadata = new HashMap<>();
+            form2Metadata.put("test", "1234");
+            Form form2 = new Form("Test Form 2", "email2@example.com", form2Metadata, new LinkedList<>());
 
-            ObjectNode form3 = mapper.createObjectNode();
-            form3.put("id", "123403");
-            form3.put("name", "Test Form 3");
-            form3.put("email", "email3@example.com");
+            Form form3 = new Form("Test Form 3", "email3@example.com", new HashMap<>(), new LinkedList<>());
 
-            node.add(form1);
-            node.add(form2);
-            node.add(form3);
+            forms.add(form1);
+            forms.add(form2);
+            forms.add(form3);
 
-            ctx.json(node);
+            ctx.json(new Response(forms, Views.DashboardSummary.class));
         });
 
-        server.get("/api/forms/123401", ctx -> {
+        server.get("/api/forms/661eca4d752415374a2d0ffa", ctx -> {
             LinkedList<Input> inputs = new LinkedList<>();
 
             TextInput name = new TextInput();
@@ -193,6 +187,9 @@ public class WebServer extends Thread {
             name.setName("name");
             name.setMaxLength(60);
             name.setRequired(true);
+            name.setIncludedInEmail(true);
+            name.getCustomAttributes().put("test", "1234");
+            name.getCustomAttributes().put("testing", "5678");
             inputs.add(name);
 
             TextInput email = new TextInput();
@@ -200,9 +197,16 @@ public class WebServer extends Thread {
             email.setName("email");
             email.setType(TextInput.TextInputTypes.EMAIL);
             email.setMaxLength(60);
+            email.setIncludedInEmail(false);
             email.setPattern("/^.*@.*$/", "Please enter a valid email address");
             email.setRequired(true);
             inputs.add(email);
+
+            TextInput customDisplayName = new TextInput();
+            customDisplayName.setName("custom");
+            customDisplayName.setCustomDisplayName("Custom Display Name");
+            customDisplayName.setIgnoredOnClient(true);
+            inputs.add(customDisplayName);
 
             ButtonInput button = new ButtonInput();
             button.setText("Submit");
@@ -210,7 +214,7 @@ public class WebServer extends Thread {
             inputs.add(button);
 
             Form form = new Form("Form A", "a@example.com", new HashMap<>(), inputs);
-            ctx.json(form);
+            ctx.json(new Response(form, Views.DashboardFull.class));
         });
 
         server.get("/api/forms/123402", ctx -> {
@@ -245,7 +249,7 @@ public class WebServer extends Thread {
             HashMap<String, String> metadata = new HashMap<>();
             metadata.put("snowcaptcha-secret", "secret4321");
             Form form = new Form("Form B", "b@example.com", metadata, inputs);
-            ctx.json(form);
+            ctx.json(new Response(form, Views.DashboardFull.class));
         });
 
         server.get("/api/forms/123403", ctx -> {
@@ -290,7 +294,7 @@ public class WebServer extends Thread {
             HashMap<String, String> metadata = new HashMap<>();
             metadata.put("snowcaptcha-secret", "secret4321");
             Form form = new Form("Form B", "b@example.com", metadata, inputs);
-            ctx.json(form);
+            ctx.json(new Response(form, Views.DashboardFull.class));
         });
     }
 

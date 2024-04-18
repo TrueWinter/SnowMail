@@ -20,7 +20,9 @@ public class ButtonInput extends Input.StylableInput {
     private ButtonInputTypes type = ButtonInputTypes.BUTTON;
     private String text;
 
-    public ButtonInput() {}
+    public ButtonInput() {
+        super.setInputType(INPUT_TYPE);
+    }
 
     public ButtonInputTypes getType() {
         return type;
@@ -36,10 +38,5 @@ public class ButtonInput extends Input.StylableInput {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    @Override
-    public String getInputType() {
-        return INPUT_TYPE;
     }
 }

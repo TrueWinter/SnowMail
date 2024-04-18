@@ -7,7 +7,9 @@ public class CustomElementInput extends Input {
     private String type = "div";
     private String innerHtml = "";
 
-    public CustomElementInput () {}
+    public CustomElementInput () {
+        super.setInputType(INPUT_TYPE);
+    }
 
     public String getType() {
         return type;
@@ -23,10 +25,5 @@ public class CustomElementInput extends Input {
 
     public void setInnerHtml(String innerHtml) {
         this.innerHtml = innerHtml;
-    }
-
-    @Override
-    public String getInputType() {
-        return INPUT_TYPE;
     }
 }

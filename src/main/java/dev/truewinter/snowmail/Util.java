@@ -40,4 +40,8 @@ public class Util {
     public static JsonNode requestToJson(Context ctx) throws JsonProcessingException {
         return new ObjectMapper().readTree(ctx.body());
     }
+
+    public static String pojoToJson(Object object, Class<?> view) throws JsonProcessingException {
+        return new ObjectMapper().writerWithView(view).writeValueAsString(object);
+    }
 }

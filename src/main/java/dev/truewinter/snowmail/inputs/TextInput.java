@@ -25,7 +25,9 @@ public class TextInput extends AbstractTextInput {
     private String pattern;
     private String patternError;
 
-    public TextInput() {}
+    public TextInput() {
+        super.setInputType(INPUT_TYPE);
+    }
 
     public TextInputTypes getType() {
         return type;
@@ -46,10 +48,5 @@ public class TextInput extends AbstractTextInput {
     public void setPattern(String pattern, String error) {
         this.pattern = pattern;
         this.patternError = error;
-    }
-
-    @Override
-    public String getInputType() {
-        return INPUT_TYPE;
     }
 }

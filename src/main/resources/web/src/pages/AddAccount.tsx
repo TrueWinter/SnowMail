@@ -5,6 +5,7 @@ import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { HttpResponse, ensureUserIsLoggedIn, post } from '../util/api';
 import { onSubmit } from '../util/forms';
+import Page from '../components/Page';
 
 export function Component() {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ export function Component() {
   }, [data]);
 
   return (
-    <>
+    <Page title="Add Account">
       <Title>Add Account</Title>
       {data && data.status !== 200 && <Text c="red">{data.body.title}</Text>}
       <Form method="POST" onSubmit={(e) => onSubmit(e, form)}>
@@ -47,7 +48,7 @@ export function Component() {
         <Space my="sm" />
         <Button type="submit">Create Account</Button>
       </Form>
-    </>
+    </Page>
   );
 }
 

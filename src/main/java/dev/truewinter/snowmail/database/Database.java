@@ -8,8 +8,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import dev.truewinter.snowmail.Config;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.Conventions;
-import org.bson.codecs.pojo.PojoCodecProvider;
+import org.bson.codecs.pojo.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,8 +27,11 @@ public class Database {
         CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
                 fromProviders(PojoCodecProvider.builder()
                         .automatic(true)
-                        .conventions(List.of(Conventions.SET_PRIVATE_FIELDS_CONVENTION))
-                        .build()));
+                        .conventions(List.of(
+                                Conventions.SET_PRIVATE_FIELDS_CONVENTION,
+                                Conventions.ANNOTATION_CONVENTION,
+                                Conventions.OBJECT_ID_GENERATORS
+                        )).build()));
         MongoClientSettings settings = MongoClientSettings.builder()
                 .codecRegistry(codecRegistry)
                 .applyConnectionString(new ConnectionString(Config.getInstance().getMongoDb()))
@@ -43,6 +45,10 @@ public class Database {
 
     public AccountDatabase getAccountDatabase() {
         return accountDatabase;
+    }
+
+    public FormDatabase getFormDatabase() {
+        return formDatabase;
     }
 
     public void destroy() {

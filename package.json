@@ -2,11 +2,14 @@
   "name": "snowmail",
   "version": "0.0.1",
   "scripts": {
-    "dev": "npx webpack serve --mode development"
+    "dev": "mvn cz.habarta.typescript-generator:typescript-generator-maven-plugin:3.2.1263:generate && npx webpack serve --mode development"
   },
   "author": "TrueWinter",
   "license": "MIT",
   "description": "",
+  "imports": {
+    "#types/*": "./types/*"
+  },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
     "@types/react": "^18.2.74",

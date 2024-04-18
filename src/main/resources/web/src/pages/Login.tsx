@@ -3,6 +3,7 @@ import { type ActionFunctionArgs, Form, useActionData, useNavigate } from 'react
 import { useEffect } from 'react';
 import DarkModeToggle from '../components/DarkModeToggle';
 import { HttpResponse, post, redirectAfterLogin } from '../util/api';
+import Page from '../components/Page';
 
 export async function action({ request }: ActionFunctionArgs) {
   return post('/api/login', await request.formData(), {
@@ -26,24 +27,26 @@ export function Component() {
   }, [data]);
 
   return (
-    <Center h="100vh">
-      <Paper p="xl" miw="25vw" withBorder>
-        <Form method="POST">
-          <Stack>
-            <Title>Login</Title>
-            {data && data.status !== 200 && <Text c="red">{data.body.title}</Text>}
-            <TextInput label="Username" name="username" autoComplete="username" required />
-            <TextInput label="Password" name="password" type="password"
-              autoComplete="current-password" required />
-            <Group>
-              <Button type="submit" style={{
-                flexGrow: 1
-              }}>Login</Button>
-              <DarkModeToggle />
-            </Group>
-          </Stack>
-        </Form>
-      </Paper>
-    </Center>
+    <Page>
+      <Center h="100vh">
+        <Paper p="xl" miw="25vw" withBorder>
+          <Form method="POST">
+            <Stack>
+              <Title>Login</Title>
+              {data && data.status !== 200 && <Text c="red">{data.body.title}</Text>}
+              <TextInput label="Username" name="username" autoComplete="username" required />
+              <TextInput label="Password" name="password" type="password"
+                autoComplete="current-password" required />
+              <Group>
+                <Button type="submit" style={{
+                  flexGrow: 1
+                }}>Login</Button>
+                <DarkModeToggle />
+              </Group>
+            </Stack>
+          </Form>
+        </Paper>
+      </Center>
+    </Page>
   );
 }

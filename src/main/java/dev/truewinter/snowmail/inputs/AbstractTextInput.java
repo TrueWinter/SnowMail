@@ -7,6 +7,7 @@ public abstract class AbstractTextInput extends Input.StylableInput {
     protected boolean required;
     protected String placeholder;
     protected int maxLength;
+    private boolean includeInEmail;
 
     public String getLabel() {
         return label;
@@ -46,5 +47,13 @@ public abstract class AbstractTextInput extends Input.StylableInput {
 
     public void setMaxLength(int maxLength) {
         this.maxLength = maxLength;
+    }
+
+    public boolean isIncludedInEmail() {
+        return includeInEmail;
+    }
+
+    public void setIncludedInEmail(boolean includeInEmail) {
+        this.includeInEmail = includeInEmail;
     }
 }

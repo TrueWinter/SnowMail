@@ -50,6 +50,11 @@
             <artifactId>mongodb-driver-sync</artifactId>
             <version>4.11.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>24.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -60,22 +65,47 @@
                 <version>3.2.1263</version>
                 <executions>
                     <execution>
-                        <id>generate</id>
+                        <id>public</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
-                        <phase>generate-sources</phase>
+                        <phase>compile</phase>
+                        <configuration>
+                            <jsonLibrary>jackson2</jsonLibrary>
+                            <jackson2Configuration>
+                                <view>dev.truewinter.snowmail.pojo.Views$Public</view>
+                            </jackson2Configuration>
+                            <classes>
+                                <class>dev.truewinter.snowmail.pojo.objects.Account</class>
+                                <class>dev.truewinter.snowmail.pojo.objects.Form</class>
+                            </classes>
+                            <customTypeMappings>
+                                <mapping>org.bson.types.ObjectId:string</mapping>
+                            </customTypeMappings>
+                            <outputFile>types/public.d.ts</outputFile>
+                            <outputKind>module</outputKind>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>all</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <jsonLibrary>jackson2</jsonLibrary>
+                            <classes>
+                                <class>dev.truewinter.snowmail.pojo.objects.Account</class>
+                                <class>dev.truewinter.snowmail.pojo.objects.Form</class>
+                            </classes>
+                            <customTypeMappings>
+                                <mapping>org.bson.types.ObjectId:string</mapping>
+                            </customTypeMappings>
+                            <outputFile>types/java.d.ts</outputFile>
+                            <outputKind>module</outputKind>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <jsonLibrary>jackson2</jsonLibrary>
-                    <classes>
-                        <class>dev.truewinter.snowmail.Account</class>
-                        <class>dev.truewinter.snowmail.Form</class>
-                    </classes>
-                    <outputFile>types/java.d.ts</outputFile>
-                    <outputKind>module</outputKind>
-                </configuration>
             </plugin>
         </plugins>
     </build>

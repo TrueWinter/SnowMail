@@ -1,21 +1,14 @@
-import { Burger as B, Button, ButtonProps, Container, Drawer, Grid, Group, Paper,
+import { Burger as B, Button, ButtonProps, Container, Drawer, Grid, Paper,
   PolymorphicComponentProps, ScrollArea, Title, useComputedColorScheme } from '@mantine/core';
-import { useDisclosure, useListState, useMediaQuery } from '@mantine/hooks';
+import { useDisclosure, useListState, useViewportSize } from '@mantine/hooks';
 import { ReactNode, forwardRef, useImperativeHandle, useRef } from 'react';
 import { v4 as uuid } from 'uuid';
 import { useForm } from '@mantine/form';
-import FormInputs from './FormInputs';
 import FormProperties from './FormProperties';
 import FormEditorInputs from './FormEditorInputs';
+import { type InputUnion, type Form } from '#types/java';
 
-interface Props {
-  form?: any // TODO: Create interfaces
-}
-
-interface BurgerProps extends PolymorphicComponentProps<'span', ButtonProps> {
-  side: 'left' | 'right'
-}
-function Burger(props: BurgerProps) {
+function Burger(props: PolymorphicComponentProps<'span', ButtonProps>) {
   const computedColorSchme = useComputedColorScheme('dark');
 
   const BurgerComponent = (
@@ -26,8 +19,7 @@ function Burger(props: BurgerProps) {
 
   // Buttons cannot be nested inside other buttons, and Burger is a button
   return (
-    <Button component="span" leftSection={props.side === 'left' && BurgerComponent}
-      rightSection={props.side === 'right' && BurgerComponent} {...props}>{props.children}</Button>
+    <Button component="span" rightSection={BurgerComponent} {...props}>{props.children}</Button>
   );
 }
 
@@ -42,7 +34,7 @@ interface SidebarRef {
 }
 const Sidebar = forwardRef((props: SidebarProps, ref) => {
   const computedColorSchme = useComputedColorScheme('dark');
-  const mobile = useMediaQuery('(max-width: 576px)');
+  const mobile = useViewportSize().width <= 576;
   const [opened, { open, close }] = useDisclosure(false);
 
   useImperativeHandle(ref, () => ({
@@ -62,26 +54,33 @@ const Sidebar = forwardRef((props: SidebarProps, ref) => {
   );
 });
 
-// TODO: Create proper interfaces
 export interface Input {
-  input: string
-  name: string
-  key: any
+  key: string
+  input: InputUnion
 }
 
-// TODO: Move into parent and fetch from server
-const data = [];
+function toKeyedInputArray(inputs: InputUnion[]): Input[] {
+  if (!inputs) return [];
+
+  return inputs.map((e) => ({
+    key: uuid(),
+    input: e
+  }));
+}
+
+interface Props {
+  form?: Form
+}
 
 export default function FormEditor({ form }: Props) {
-  const mobile = useMediaQuery('(max-width: 576px)');
-  const inputsRef = useRef<SidebarRef>(null);
+  const mobile = useViewportSize().width <= 576;
   const propertiesRef = useRef<SidebarRef>(null);
-  const [state, handlers] = useListState<Input>(data);
+  const [state, handlers] = useListState<Input>(toKeyedInputArray(form?.inputs));
 
   const propertiesForm = useForm({
     initialValues: {
-      name: '',
-      email: ''
+      name: form?.name || '',
+      email: form?.email || ''
     },
     validate: {
       name: (v) => (!v ? 'Name is required' : null),
@@ -102,35 +101,21 @@ export default function FormEditor({ form }: Props) {
         height: '100%'
       }
     }}>
-      <Sidebar title="Inputs" ref={inputsRef}>
-        <FormInputs add={(input, name) => {
-          handlers.append({
-            input,
-            name,
-            key: uuid()
-          });
-
-          inputsRef.current.close();
-        }} />
-      </Sidebar>
-
-      <Grid.Col span={!mobile ? 7 : 12}>
+      <Grid.Col span={!mobile ? 9 : 12}>
         <Container h="100%" p="sm" mx={{ md: 'xl' }} fluid>
           <ScrollArea.Autosize h="100%" scrollbars="y">
             {mobile && (
-              <Group grow>
-                <Burger side="left" onClick={inputsRef.current?.open}>Inputs</Burger>
-                <Burger side="right" onClick={propertiesRef.current?.open}>Properties</Burger>
-              </Group>
+              <Burger onClick={propertiesRef.current?.open} w="100%">Properties</Burger>
             )}
             <Title mb="sm">{form ? 'Edit' : 'Create'} Form</Title>
-            <FormEditorInputs data={[state, handlers]} remove={remove} form={propertiesForm} />
+            <FormEditorInputs data={[state, handlers]} remove={remove}
+              propertiesForm={propertiesForm} />
           </ScrollArea.Autosize>
         </Container>
       </Grid.Col>
 
       <Sidebar title="Properties" position="right" ref={propertiesRef}>
-        <FormProperties form={propertiesForm} />
+        <FormProperties propertiesForm={propertiesForm} form={form} />
       </Sidebar>
     </Grid>
   );

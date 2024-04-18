@@ -1,9 +1,7 @@
 package dev.truewinter.snowmail.inputs;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
+import dev.truewinter.snowmail.pojo.Views;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -11,6 +9,7 @@ import java.util.*;
 // TODO: Check if this way of including the inputType works when deserializing
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.EXISTING_PROPERTY,
         property = "inputType",
         visible = true
 )
@@ -33,11 +32,7 @@ public abstract class Input {
             // ignoreOnClient: if true, it will not be rendered by SnowMail in the browser;
             // useful for fields that are required server-side after being added by client-side JS (e.g. captcha)
             "ignoreOnClient": false,
-            "metadata": {
-                "displayName": "Email", // name displayed in the form editor
-                "addedBy": "SnowMailInputPlugin", // plugin that added the input
-                "custom": {} // optional, plugins can use this to store arbitrary metadata
-            }, // optional, only exists for plugin-added inputs and will not be sent to client
+            "customDisplayName": "SnowMailInputPlugin-Email", // optional, name displayed in the form editor for plugin-added inputs
             "label": "Email",
             "id": "sm-123456", // used to link the field and label, a random ID is generated if one is not provided
             "name": "email",
@@ -62,13 +57,19 @@ public abstract class Input {
         The data in the object will differ depending on the input_type.
      */
 
+    private String inputType;
     private boolean ignoreOnClient;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private InputMetadata metadata;
+    @JsonView(Views.DashboardFull.class)
+    private String customDisplayName;
     private Map<String, String> customAttributes = new HashMap<>();
 
-    @JsonProperty("inputType")
-    public abstract String getInputType();
+    public String getInputType() {
+        return inputType;
+    }
+
+    protected void setInputType(String inputType) {
+        this.inputType = inputType;
+    }
 
     public boolean isIgnoredOnClient() {
         return ignoreOnClient;
@@ -78,45 +79,16 @@ public abstract class Input {
         this.ignoreOnClient = ignoreOnClient;
     }
 
-    @Nullable
-    public InputMetadata getMetadata() {
-        return metadata;
+    public String getCustomDisplayName() {
+        return customDisplayName;
     }
 
-    public void setMetadata(InputMetadata metadata) {
-        this.metadata = metadata;
+    public void setCustomDisplayName(String customDisplayName) {
+        this.customDisplayName = customDisplayName;
     }
 
     public Map<String, String> getCustomAttributes() {
         return customAttributes;
-    }
-
-    public static class InputMetadata {
-        private String displayName;
-        private String addedBy;
-        private List<String> custom = new ArrayList<>();
-
-        public InputMetadata() {}
-
-        public String getDisplayName() {
-            return displayName;
-        }
-
-        public void setDisplayName(String displayName) {
-            this.displayName = displayName;
-        }
-
-        public String getAddedBy() {
-            return addedBy;
-        }
-
-        public void setAddedBy(String addedBy) {
-            this.addedBy = addedBy;
-        }
-
-        public List<String> getCustom() {
-            return custom;
-        }
     }
 
     @SuppressWarnings("SpellCheckingInspection")
@@ -146,15 +118,12 @@ public abstract class Input {
         public static final String INPUT_TYPE = "MULTIPLE";
         private LinkedList<Input> inputs = new LinkedList<>();
 
-        public MultipleInputs() {}
+        public MultipleInputs() {
+            super.setInputType(INPUT_TYPE);
+        }
 
         public LinkedList<Input> getInputs() {
             return inputs;
-        }
-
-        @Override
-        public String getInputType() {
-            return INPUT_TYPE;
         }
     }
 }

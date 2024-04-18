@@ -8,6 +8,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { nprogress } from '@mantine/nprogress';
 import { HttpResponse, del, get, getUsername, patch } from '../util/api';
 import { onSubmit } from '../util/forms';
+import Page from '../components/Page';
 
 async function deleteAccount(username: string) {
   nprogress.start();
@@ -58,7 +59,7 @@ export function Component() {
   const username = getUsername();
 
   return (
-    <>
+    <Page title="Edit Account">
       <Title>Edit Account: {params.username}</Title>
       {data && data.status !== 200 && <Text c="red">{data.body.title}</Text>}
       <Form method="POST" onSubmit={(e) => onSubmit(e, form)}>
@@ -103,7 +104,7 @@ export function Component() {
           </Group>
         </Skeleton>
       </Modal>
-    </>
+    </Page>
   );
 }
 

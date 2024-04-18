@@ -7,6 +7,9 @@
     "allowJs": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "allowUmdGlobalAccess": true
+    "allowUmdGlobalAccess": true,
+    "paths": {
+      "#types/*": ["./types/*"]
+    }
   }
 }

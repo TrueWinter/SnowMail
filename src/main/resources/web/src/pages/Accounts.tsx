@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { get } from '../util/api';
 import AccountCard from '../components/AccountCard';
 import ListCardSkeleton from '../components/ListCardSkeleton';
+import Page from '../components/Page';
 
 export interface Account {
   username: string
@@ -22,7 +23,7 @@ export function Component() {
   }, []);
 
   return (
-    <>
+    <Page title="Accounts">
       <Group justify="space-between" my="sm">
         <Title>Accounts</Title>
         <Button component={Link} to="/accounts/add">
@@ -33,6 +34,6 @@ export function Component() {
         {loading ? <ListCardSkeleton /> :
           accounts.map((account) => <AccountCard key={account.username} data={account} />)}
       </Stack>
-    </>
+    </Page>
   );
 }

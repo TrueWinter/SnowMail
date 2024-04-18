@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { get } from '../util/api';
 import FormCard from '../components/FormCard';
 import ListCardSkeleton from '../components/ListCardSkeleton';
+import Page from '../components/Page';
 
 export interface FormSummary {
   id: string
@@ -24,7 +25,7 @@ export function Component() {
   }, []);
 
   return (
-    <>
+    <Page title="Forms">
       <Group justify="space-between" my="sm">
         <Title>Forms</Title>
         <Button component={Link} to="/forms/add">
@@ -35,6 +36,6 @@ export function Component() {
         {loading ? <ListCardSkeleton /> :
           forms.map((form) => <FormCard key={form.id} data={form} />)}
       </Stack>
-    </>
+    </Page>
   );
 }

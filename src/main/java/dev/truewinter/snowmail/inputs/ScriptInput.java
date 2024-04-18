@@ -9,7 +9,9 @@ public class ScriptInput extends Input {
     private boolean async;
     private boolean module;
 
-    public ScriptInput() {}
+    public ScriptInput() {
+        super.setInputType(INPUT_TYPE);
+    }
 
     public String getSrc() {
         return src;
@@ -41,10 +43,5 @@ public class ScriptInput extends Input {
 
     public void setModule(boolean module) {
         this.module = module;
-    }
-
-    @Override
-    public String getInputType() {
-        return INPUT_TYPE;
     }
 }

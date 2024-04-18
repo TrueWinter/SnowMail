@@ -1,23 +1,31 @@
 import { ScrollArea, Stack, Text, Title } from '@mantine/core';
-import InputCard from './InputCard';
+import { modals } from '@mantine/modals';
+import InputCard, { INPUT_TYPES } from './InputCard';
+import { type Input } from './FormEditor';
 
+// eslint-disable-next-line no-unused-vars
+type AddFunction = (input: Input) => void
 interface Props {
-  // eslint-disable-next-line no-unused-vars
-  add: (input: string, name: string) => void;
+  add: AddFunction
 }
 
 export default function FormInputs({ add }: Props) {
   return (
-    <ScrollArea.Autosize h="100%" scrollbars="y">
+    <>
       <Title size="h2" visibleFrom="md">Form Inputs</Title>
       <Text size="sm" c="dimmed" mb="sm">Click on an input to add it to the form</Text>
 
       <Stack gap="sm">
-        {new Array(15).fill(null).map((e, i) => (
-          <InputCard key={i} name={`Input ${i.toString()}`}
-            onClick={() => add('Input', i.toString())} />
-        ))}
+        {INPUT_TYPES.map((e) => <InputCard key={e} type={e} onClick={add} />)}
       </Stack>
-    </ScrollArea.Autosize>
+    </>
   );
+}
+
+export function openModal(add: AddFunction) {
+  modals.open({
+    title: 'Inputs',
+    scrollAreaComponent: ScrollArea.Autosize,
+    children: <FormInputs add={add} />
+  });
 }
