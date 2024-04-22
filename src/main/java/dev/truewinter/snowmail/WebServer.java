@@ -162,7 +162,7 @@ public class WebServer extends Thread {
         });
 
         server.get("/api/forms", ctx -> {
-            LinkedList<Form> forms = new LinkedList<>();
+            /*LinkedList<Form> forms = new LinkedList<>();
 
             Form form1 = new Form(new ObjectId("661eca4d752415374a2d0ffa"), "Test Form", "email@example.com", new HashMap<>(), new LinkedList<>());
 
@@ -176,125 +176,55 @@ public class WebServer extends Thread {
             forms.add(form2);
             forms.add(form3);
 
-            ctx.json(new Response(forms, Views.DashboardSummary.class));
+            ctx.json(new Response(forms, Views.DashboardSummary.class));*/
+            ctx.json(new Response(database.getFormDatabase().getForms(), Views.DashboardSummary.class));
         });
 
-        server.get("/api/forms/661eca4d752415374a2d0ffa", ctx -> {
-            LinkedList<Input> inputs = new LinkedList<>();
+        server.post("/api/forms", ctx -> {
+            Form form = ctx.bodyAsClass(Form.class);
+            if (!form.isValid()) {
+                throw new BadRequestResponse();
+            }
 
-            TextInput name = new TextInput();
-            name.setLabel("Name");
-            name.setName("name");
-            name.setMaxLength(60);
-            name.setRequired(true);
-            name.setIncludedInEmail(true);
-            name.getCustomAttributes().put("test", "1234");
-            name.getCustomAttributes().put("testing", "5678");
-            inputs.add(name);
-
-            TextInput email = new TextInput();
-            email.setLabel("Email");
-            email.setName("email");
-            email.setType(TextInput.TextInputTypes.EMAIL);
-            email.setMaxLength(60);
-            email.setIncludedInEmail(false);
-            email.setPattern("/^.*@.*$/", "Please enter a valid email address");
-            email.setRequired(true);
-            inputs.add(email);
-
-            TextInput customDisplayName = new TextInput();
-            customDisplayName.setName("custom");
-            customDisplayName.setCustomDisplayName("Custom Display Name");
-            customDisplayName.setIgnoredOnClient(true);
-            inputs.add(customDisplayName);
-
-            ButtonInput button = new ButtonInput();
-            button.setText("Submit");
-            button.setType(ButtonInput.ButtonInputTypes.SUBMIT);
-            inputs.add(button);
-
-            Form form = new Form("Form A", "a@example.com", new HashMap<>(), inputs);
-            ctx.json(new Response(form, Views.DashboardFull.class));
+            ObjectNode node = new ObjectMapper().createObjectNode();
+            node.put("id", database.getFormDatabase().createForm(form));
+            ctx.json(node);
         });
 
-        server.get("/api/forms/123402", ctx -> {
-            LinkedList<Input> inputs = new LinkedList<>();
+        server.put("/api/forms/{id}", ctx -> {
+            String id = ctx.pathParam("id");
+            if (!database.getFormDatabase().formExists(id)) {
+                throw new NotFoundResponse();
+            }
 
-            Input.MultipleInputs snowcaptcha = new Input.MultipleInputs();
-            LinkedList<Input> snowcaptchaInputs = snowcaptcha.getInputs();
+            Form form = ctx.bodyAsClass(Form.class);
+            if (!form.isValid()) {
+                throw new BadRequestResponse();
+            }
 
-            TextInput snowcaptchaResp = new TextInput();
-            snowcaptchaResp.setLabel("SnowCaptcha");
-            snowcaptchaResp.setName("snowcaptcha");
-            snowcaptchaResp.setType(TextInput.TextInputTypes.HIDDEN);
-            snowcaptchaResp.setRequired(true);
-            snowcaptchaResp.setIgnoredOnClient(true);
-            snowcaptchaInputs.add(snowcaptchaResp);
-
-            ScriptInput snowcaptchaScript = new ScriptInput();
-            snowcaptchaScript.setSrc("https://snowcaptcha-cdn.binaryfrost.net/captcha.js");
-            snowcaptchaScript.setAsync(true);
-            Map<String, String> customAttribs = snowcaptchaScript.getCustomAttributes();
-            customAttribs.put("data-sitekey", "test1234");
-            customAttribs.put("data-host", "https://snowcaptcha.binaryfrost.net");
-            snowcaptchaInputs.add(snowcaptchaScript);
-
-            inputs.add(snowcaptcha);
-
-            ButtonInput button = new ButtonInput();
-            button.setText("Submit");
-            button.setType(ButtonInput.ButtonInputTypes.SUBMIT);
-            inputs.add(button);
-
-            HashMap<String, String> metadata = new HashMap<>();
-            metadata.put("snowcaptcha-secret", "secret4321");
-            Form form = new Form("Form B", "b@example.com", metadata, inputs);
-            ctx.json(new Response(form, Views.DashboardFull.class));
+            database.getFormDatabase().editForm(form);
+            ctx.status(200);
         });
 
-        server.get("/api/forms/123403", ctx -> {
-            LinkedList<Input> inputs = new LinkedList<>();
+        server.get("/api/forms/{id}", ctx -> {
+            String id = ctx.pathParam("id");
+            Optional<Form> form = database.getFormDatabase().getForm(id);
+            if (form.isEmpty()) {
+                throw new NotFoundResponse();
+            }
 
-            Input.MultipleInputs snowcaptcha = new Input.MultipleInputs();
-            LinkedList<Input> snowcaptchaInputs = snowcaptcha.getInputs();
+            ctx.json(new Response(form.get(), Views.DashboardFull.class));
+        });
 
-            TextInput snowcaptchaResp = new TextInput();
-            snowcaptchaResp.setLabel("SnowCaptcha");
-            snowcaptchaResp.setName("snowcaptcha");
-            snowcaptchaResp.setType(TextInput.TextInputTypes.HIDDEN);
-            snowcaptchaResp.setRequired(true);
-            snowcaptchaResp.setIgnoredOnClient(true);
-            snowcaptchaInputs.add(snowcaptchaResp);
+        server.delete("/api/forms/{id}", ctx -> {
+            String id = ctx.pathParam("id");
+            Optional<Form> form = database.getFormDatabase().getForm(id);
+            if (form.isEmpty()) {
+                throw new NotFoundResponse();
+            }
 
-            CustomElementInput snowcaptchaScript = new CustomElementInput();
-            snowcaptchaScript.setType("script");
-            Map<String, String> customAttribs = snowcaptchaScript.getCustomAttributes();
-            customAttribs.put("id", "snowcaptcha-lazy");
-            customAttribs.put("data-sitekey", "test1234");
-            customAttribs.put("data-host", "https://snowcaptcha.binaryfrost.net");
-            customAttribs.put("async", "true");
-            customAttribs.put("data-src", "https://snowcaptcha-cdn.binaryfrost.net/captcha.js");
-            snowcaptchaInputs.add(snowcaptchaScript);
-
-            CustomElementInput snowcaptchaLoadingScript = new CustomElementInput();
-            snowcaptchaLoadingScript.setType("script");
-            snowcaptchaLoadingScript.setInnerHtml("(function(){" +
-                    "const e = document.getElementById('snowcaptcha-lazy');" +
-                    "e.src = e.dataset.src;" +
-                    "}())");
-            snowcaptchaInputs.add(snowcaptchaLoadingScript);
-
-            inputs.add(snowcaptcha);
-
-            ButtonInput button = new ButtonInput();
-            button.setText("Submit");
-            button.setType(ButtonInput.ButtonInputTypes.SUBMIT);
-            inputs.add(button);
-
-            HashMap<String, String> metadata = new HashMap<>();
-            metadata.put("snowcaptcha-secret", "secret4321");
-            Form form = new Form("Form B", "b@example.com", metadata, inputs);
-            ctx.json(new Response(form, Views.DashboardFull.class));
+            database.getFormDatabase().deleteForm(id);
+            ctx.status(200);
         });
     }
 

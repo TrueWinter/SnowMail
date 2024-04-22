@@ -1,8 +1,9 @@
 package dev.truewinter.snowmail.inputs;
 
 import com.fasterxml.jackson.annotation.*;
+import dev.truewinter.snowmail.NullableField;
 import dev.truewinter.snowmail.pojo.Views;
-import org.jetbrains.annotations.Nullable;
+import org.bson.codecs.pojo.annotations.BsonIgnore;
 
 import java.util.*;
 
@@ -58,7 +59,10 @@ public abstract class Input {
      */
 
     private String inputType;
-    private boolean ignoreOnClient;
+    @BsonIgnore
+    @JsonView(Views.DashboardFull.class)
+    // Key for React
+    private String rKey = UUID.randomUUID().toString();
     @JsonView(Views.DashboardFull.class)
     private String customDisplayName;
     private Map<String, String> customAttributes = new HashMap<>();
@@ -71,14 +75,7 @@ public abstract class Input {
         this.inputType = inputType;
     }
 
-    public boolean isIgnoredOnClient() {
-        return ignoreOnClient;
-    }
-
-    public void setIgnoredOnClient(boolean ignoreOnClient) {
-        this.ignoreOnClient = ignoreOnClient;
-    }
-
+    @NullableField
     public String getCustomDisplayName() {
         return customDisplayName;
     }
@@ -90,6 +87,9 @@ public abstract class Input {
     public Map<String, String> getCustomAttributes() {
         return customAttributes;
     }
+
+    @JsonIgnore
+    public abstract boolean isValid();
 
     @SuppressWarnings("SpellCheckingInspection")
     public static abstract class StylableInput extends Input {
@@ -124,6 +124,15 @@ public abstract class Input {
 
         public LinkedList<Input> getInputs() {
             return inputs;
+        }
+
+        @Override
+        public boolean isValid() {
+            for (Input input : inputs) {
+                if (!input.isValid()) return false;
+            }
+
+            return true;
         }
     }
 }

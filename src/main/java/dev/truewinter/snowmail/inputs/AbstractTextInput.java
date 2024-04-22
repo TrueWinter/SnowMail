@@ -1,5 +1,9 @@
 package dev.truewinter.snowmail.inputs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.truewinter.snowmail.NullableField;
+import dev.truewinter.snowmail.Util;
+
 @SuppressWarnings("unused")
 public abstract class AbstractTextInput extends Input.StylableInput {
     protected String label;
@@ -8,6 +12,7 @@ public abstract class AbstractTextInput extends Input.StylableInput {
     protected String placeholder;
     protected int maxLength;
     private boolean includeInEmail;
+    private boolean ignoreOnClient;
 
     public String getLabel() {
         return label;
@@ -33,6 +38,7 @@ public abstract class AbstractTextInput extends Input.StylableInput {
         this.required = required;
     }
 
+    @NullableField
     public String getPlaceholder() {
         return placeholder;
     }
@@ -55,5 +61,18 @@ public abstract class AbstractTextInput extends Input.StylableInput {
 
     public void setIncludedInEmail(boolean includeInEmail) {
         this.includeInEmail = includeInEmail;
+    }
+
+    public boolean isIgnoredOnClient() {
+        return ignoreOnClient;
+    }
+
+    public void setIgnoredOnClient(boolean ignoreOnClient) {
+        this.ignoreOnClient = ignoreOnClient;
+    }
+
+    @Override
+    public boolean isValid() {
+        return !Util.isBlank(label) && !Util.isBlank(name);
     }
 }

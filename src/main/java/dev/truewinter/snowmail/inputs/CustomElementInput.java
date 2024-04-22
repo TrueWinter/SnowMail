@@ -1,5 +1,8 @@
 package dev.truewinter.snowmail.inputs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.truewinter.snowmail.Util;
+
 @SuppressWarnings("unused")
 public class CustomElementInput extends Input {
     public static final String INPUT_TYPE = "CUSTOM";
@@ -25,5 +28,10 @@ public class CustomElementInput extends Input {
 
     public void setInnerHtml(String innerHtml) {
         this.innerHtml = innerHtml;
+    }
+
+    @Override
+    public boolean isValid() {
+        return !Util.isBlank(type);
     }
 }

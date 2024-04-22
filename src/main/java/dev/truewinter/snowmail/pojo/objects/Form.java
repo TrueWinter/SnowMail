@@ -1,8 +1,10 @@
 package dev.truewinter.snowmail.pojo.objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import dev.truewinter.snowmail.Util;
 import dev.truewinter.snowmail.inputs.Input;
 import dev.truewinter.snowmail.pojo.Views;
 import org.bson.codecs.pojo.annotations.BsonId;
@@ -54,5 +56,17 @@ public class Form {
 
     public LinkedList<Input> getInputs() {
         return inputs;
+    }
+
+    @JsonIgnore
+    public boolean isValid() {
+        if (Util.isBlank(name) || Util.isBlank(email)) return false;
+        if (!email.matches("^\\S+@\\S+$")) return false;
+
+        for (Input input : inputs) {
+            if (!input.isValid()) return false;
+        }
+
+        return true;
     }
 }

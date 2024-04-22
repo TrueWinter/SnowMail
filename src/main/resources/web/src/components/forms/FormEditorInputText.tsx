@@ -1,41 +1,45 @@
 import { Text } from '@mantine/core';
-import { Input } from './FormEditor';
 import { toTitleCase } from '../../util/text';
+import { type InputUnion } from '#types/java';
 
 interface Props {
-  input: Input
+  input: InputUnion
 }
 
 export default function FormEditorInputText({ input }: Props) {
   if (!input) return null;
-  const type = toTitleCase(input.input.inputType);
+  const type = toTitleCase(input.inputType);
   let name: string;
 
-  if (input.input.customDisplayName) {
-    name = input.input.customDisplayName;
+  if (input.customDisplayName) {
+    name = input.customDisplayName;
   } else {
-    switch (input.input.inputType) {
+    switch (input.inputType) {
       case 'TEXT':
-        name = input.input.name;
+        name = input.label;
         break;
       case 'TEXTAREA':
-        name = input.input.name;
+        name = input.label;
         break;
       case 'BUTTON':
-        name = input.input.text;
+        name = input.text;
         break;
       case 'CUSTOM':
-        name = input.input.type;
+        name = input.type;
         break;
       case 'MULTIPLE':
-        name = `${input.input.inputs.length} inputs`;
+        name = `${input.inputs.length} inputs`;
         break;
       case 'SCRIPT':
-        name = input.input.src;
+        name = input.src;
         break;
       default:
         name = '<unknown>';
     }
+  }
+
+  if (!name) {
+    name = 'New Input';
   }
 
   return <Text>{type}: {name}</Text>;

@@ -1,88 +1,67 @@
-import { ActionIcon, Card, Group, ScrollArea, Stack, Text } from '@mantine/core';
-import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
-import { IconEdit, IconGripVertical, IconTrash } from '@tabler/icons-react';
+import { Stack, Text } from '@mantine/core';
+import { DragDropContext, Draggable, DraggableChildrenFn, Droppable } from '@hello-pangea/dnd';
 import { UseListState } from '@mantine/hooks/lib/use-list-state/use-list-state';
-import { modals } from '@mantine/modals';
-import { type Input } from './FormEditor';
-import FormEditorInputText from './FormEditorInputText';
-import FormEditorInputModal from './FormEditorInputModal';
+import { useState } from 'react';
+import type { InputUnion } from '#types/java';
+import FormEditorDraggableInput, { DeleteModal, EditModal } from './FormEditorDraggableInput';
 
 interface Props {
-  data: UseListState<Input>
+  id: string
+  data: UseListState<InputUnion>
+  // eslint-disable-next-line no-unused-vars
+  set: (key: string, changes: object) => void
   // eslint-disable-next-line no-unused-vars
   remove: (key: string) => void
 }
 
-export default function FormEditorInputSorter({ data, remove }: Props) {
+export default function FormEditorInputSorter({ id, data, set, remove }: Props) {
   const [state, handlers] = data;
+  const [editModalKey, setEditModalKey] = useState<string>(null);
+  const [deleteModalKey, setDeleteModalKey] = useState<string>(null);
 
-  const openEditModal = (input: Input) => modals.open({
-    title: 'Edit Input',
-    scrollAreaComponent: ScrollArea.Autosize,
-    children: (
-      <FormEditorInputModal input={input} />
-    )
-  });
+  // console.log('sorter', id, state);
 
-  const openDeleteModal = (key: string) => modals.openConfirmModal({
-    title: 'Delete',
-    children: <Text>Are you sure you want to delete this input?</Text>,
-    labels: {
-      cancel: 'Cancel',
-      confirm: 'Delete'
-    },
-    confirmProps: {
-      color: 'red'
-    },
-    onConfirm: () => remove(key)
-  });
+  const getRenderItem = (items: InputUnion[]):
+  // eslint-disable-next-line react/function-component-definition, react/no-unstable-nested-components
+    DraggableChildrenFn => (provided, snapshot, rubric) => {
+    const item = items[rubric.source.index];
+    // console.log('state:sorter', id, item);
 
-  const items = state.map((e, i) => (
-    <Draggable key={e.key} index={i} draggableId={e.key}>
-      {(provided, snapshot) => (
-        <div ref={provided.innerRef} {...provided.draggableProps}>
-          <Card withBorder style={{
-            borderColor: snapshot.isDragging ? 'var(--mantine-color-blue-9)' : undefined
-          }}>
-            <Group justify="space-between" style={{
-              userSelect: 'none'
-            }}>
-              <Group {...provided.dragHandleProps} style={{
-                // Mantine added other styles when setting the grow prop
-                flexGrow: '1'
-              }}>
-                <IconGripVertical />
-                <FormEditorInputText input={e} />
-              </Group>
-              <Group>
-                <ActionIcon size="lg" onClick={() => openEditModal(e)}>
-                  <IconEdit />
-                </ActionIcon>
-                <ActionIcon color="red" size="lg" onClick={() => openDeleteModal(e.key)}>
-                  <IconTrash />
-                </ActionIcon>
-              </Group>
-            </Group>
-          </Card>
-        </div>
-      )}
-    </Draggable>
-  ));
+    return (
+      <FormEditorDraggableInput input={item} provided={provided} snapshot={snapshot}
+        openEditModal={(key) => setEditModalKey(key)}
+        openDeleteModal={(key) => setDeleteModalKey(key)} />
+    );
+  };
+
+  const items = getRenderItem(state);
 
   return (
-    <DragDropContext onDragEnd={({ destination, source }) =>
-      // eslint-disable-next-line implicit-arrow-linebreak
-      handlers.reorder({ from: source.index, to: destination?.index })}>
-      <Droppable droppableId="input-list" direction="vertical">
-        {(provided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
-            <Stack gap="sm">
-              {items.length !== 0 ? items : <Text size="lg">No inputs added yet.</Text>}
-              {provided.placeholder}
-            </Stack>
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <>
+      <EditModal id={editModalKey} state={state}
+        onClose={() => setEditModalKey(null)} set={set} remove={remove} />
+      <DeleteModal id={deleteModalKey} state={state}
+        onClose={() => setDeleteModalKey(null)} remove={remove} />
+      <DragDropContext onDragEnd={({ destination, source }) =>
+        // eslint-disable-next-line implicit-arrow-linebreak
+        handlers.reorder({ from: source.index, to: destination?.index })}>
+        <Droppable droppableId={id} direction="vertical" renderClone={items}>
+          {(provided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef}>
+              <Stack gap="sm">
+                {state.length !== 0 ?
+                  state.map((e, i) => (
+                    <Draggable key={e.rKey} index={i} draggableId={e.rKey}>
+                      {items}
+                    </Draggable>
+                  )) :
+                  <Text size="lg">No inputs added yet.</Text>}
+                {provided.placeholder}
+              </Stack>
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </>
   );
 }

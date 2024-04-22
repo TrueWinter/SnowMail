@@ -1,6 +1,7 @@
 package dev.truewinter.snowmail.inputs;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import dev.truewinter.snowmail.NullableField;
 
 @SuppressWarnings("unused")
 public class TextInput extends AbstractTextInput {
@@ -37,10 +38,12 @@ public class TextInput extends AbstractTextInput {
         this.type = type;
     }
 
+    @NullableField
     public String getPattern() {
         return pattern;
     }
 
+    @NullableField
     public String getPatternError() {
         return patternError;
     }

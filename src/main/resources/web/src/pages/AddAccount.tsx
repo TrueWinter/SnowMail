@@ -29,7 +29,7 @@ export function Component() {
   useEffect(() => {
     if (data && data.status === 200) {
       notifications.show({
-        message: `Account with username ${form.values.username} created`
+        message: 'Account created'
       });
       navigate('/accounts');
     }

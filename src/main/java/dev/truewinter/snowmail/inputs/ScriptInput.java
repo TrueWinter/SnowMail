@@ -1,5 +1,8 @@
 package dev.truewinter.snowmail.inputs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.truewinter.snowmail.Util;
+
 @SuppressWarnings("unused")
 public class ScriptInput extends Input {
     public static final String INPUT_TYPE = "SCRIPT";
@@ -43,5 +46,10 @@ public class ScriptInput extends Input {
 
     public void setModule(boolean module) {
         this.module = module;
+    }
+
+    @Override
+    public boolean isValid() {
+        return !Util.isBlank(src);
     }
 }

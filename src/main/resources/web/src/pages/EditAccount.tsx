@@ -50,7 +50,7 @@ export function Component() {
   useEffect(() => {
     if (data && data.status === 200) {
       notifications.show({
-        message: `Password changed for account with username ${params.username}`
+        message: 'Password changed'
       });
       navigate('/accounts');
     }
@@ -95,8 +95,7 @@ export function Component() {
               deleteAccount(params.username).then((d) => {
                 notifications.show({
                   color: d.status !== 200 ? 'red' : undefined,
-                  message: d.status === 200 ?
-                    `Account with username ${params.username} deleted` : d.body.title
+                  message: d.status === 200 ? 'Account deleted' : d.body.title
                 });
                 navigate('/accounts');
               });

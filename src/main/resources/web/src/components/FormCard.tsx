@@ -1,30 +1,61 @@
-import { Button, Card, Center, Grid, Stack, Text } from '@mantine/core';
-import { Link } from 'react-router-dom';
+import { ActionIcon, Button, Card, Center, Grid, Group, Stack, Text } from '@mantine/core';
+import { Link, useNavigate } from 'react-router-dom';
+import { IconTrash } from '@tabler/icons-react';
+import { modals } from '@mantine/modals';
+import { notifications } from '@mantine/notifications';
 import { type FormSummary } from '../pages/Forms';
+import { del } from '../util/api';
 
 interface Props {
   data: FormSummary
 }
 
 export default function FormCard({ data }: Props) {
+  const navigate = useNavigate();
+
+  function showDeleteModal() {
+    modals.openConfirmModal({
+      title: 'Delete',
+      children: <Text>Are you sure you want to delete this form?</Text>,
+      labels: {
+        confirm: 'Delete',
+        cancel: 'Cancel'
+      },
+      confirmProps: {
+        color: 'red'
+      },
+      onConfirm: () => {
+        del(`/api/forms/${data.id}`).then(() => {
+          notifications.show({
+            message: 'Form deleted'
+          });
+          navigate('/');
+        });
+      }
+    });
+  }
+
   return (
     <Card p="xs" withBorder>
       <Grid align="center">
-        <Grid.Col span={4}>
+        <Grid.Col span={{ sm: 12, md: 4 }}>
           <Center>
             <Text size="lg" fw="bold">{data.id}</Text>
           </Center>
         </Grid.Col>
-        <Grid.Col span={4}>
+        <Grid.Col span={{ sm: 12, md: 4 }}>
           <Stack gap="xs">
             <Text>Name: {data.name}</Text>
             <Text>Email: {data.email}</Text>
           </Stack>
         </Grid.Col>
-        <Grid.Col span={4}>
-          <Center>
+        <Grid.Col span={{ sm: 12, md: 4 }}>
+          <Group justify="center">
             <Button component={Link} to={`/forms/edit/${data.id}`}>Edit</Button>
-          </Center>
+            <ActionIcon size="lg" color="red" onClick={showDeleteModal}>
+              <IconTrash />
+            </ActionIcon>
+          </Group>
         </Grid.Col>
       </Grid>
     </Card>

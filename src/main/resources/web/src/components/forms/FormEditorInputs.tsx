@@ -1,61 +1,33 @@
 import { ActionIcon, Button, Group, Paper } from '@mantine/core';
 import { UseListState } from '@mantine/hooks/lib/use-list-state/use-list-state';
-import { useViewportSize } from '@mantine/hooks';
-import { notifications } from '@mantine/notifications';
-import { nprogress } from '@mantine/nprogress';
-import { useState } from 'react';
 import { type UseFormReturnType } from '@mantine/form';
-import { type Input } from './FormEditor';
-import FormEditorInputSorter from './FormEditorInputSorter';
 import { IconPlus } from '@tabler/icons-react';
+import FormEditorInputSorter from './FormEditorInputSorter';
 import { openModal } from './FormInputs';
+import { type InputUnion } from '#types/java';
 
 interface Props {
   propertiesForm: UseFormReturnType<{name: string, email: string }>
-  data: UseListState<Input>
+  data: UseListState<InputUnion>
+  // eslint-disable-next-line no-unused-vars
+  set: (key: string, changes: object) => void
   // eslint-disable-next-line no-unused-vars
   remove: (key: string) => void
+  submit: () => void
 }
 
-export default function FormEditorInputs({ data, remove, propertiesForm }: Props) {
+export default function FormEditorInputs({ data, remove, set, propertiesForm, submit }: Props) {
   const [state, handlers] = data;
-  const { width } = useViewportSize();
-  const [submitting, setSubmitting] = useState(false);
-
-  function handleSubmit() {
-    if (propertiesForm.validate().hasErrors) {
-      if (width <= 576) {
-        notifications.show({
-          message: 'Unable to save form. Invalid data detected in form properties.',
-          color: 'red'
-        });
-      }
-
-      return;
-    }
-
-    // TODO: Submit
-    setSubmitting(true);
-    nprogress.start();
-
-    setTimeout(() => {
-      nprogress.complete();
-      setSubmitting(false);
-      notifications.show({
-        message: 'Form saved'
-      });
-    }, 3000);
-  }
 
   return (
     <Paper withBorder p="xs">
-      <FormEditorInputSorter data={[state, handlers]} remove={remove} />
+      <FormEditorInputSorter data={[state, handlers]} set={set} remove={remove} id="input-list" />
       <Group justify="flex-end" mt="sm">
         <ActionIcon size="lg" onClick={() => openModal((input) => handlers.append(input))}>
           <IconPlus />
         </ActionIcon>
-        <Button disabled={state.length === 0} onClick={handleSubmit}
-          loading={submitting}>Save</Button>
+        <Button disabled={state.length === 0 || !propertiesForm.isValid()}
+          onClick={submit}>Save</Button>
       </Group>
     </Paper>
   );

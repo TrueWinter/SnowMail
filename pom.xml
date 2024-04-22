@@ -82,6 +82,10 @@
                             <customTypeMappings>
                                 <mapping>org.bson.types.ObjectId:string</mapping>
                             </customTypeMappings>
+                            <nullableAnnotations>
+                                <nullableAnnotation>dev.truewinter.snowmail.NullableField</nullableAnnotation>
+                            </nullableAnnotations>
+                            <nullabilityDefinition>undefinedInlineUnion</nullabilityDefinition>
                             <outputFile>npm/types/public.d.ts</outputFile>
                             <outputKind>module</outputKind>
                         </configuration>
@@ -101,6 +105,10 @@
                             <customTypeMappings>
                                 <mapping>org.bson.types.ObjectId:string</mapping>
                             </customTypeMappings>
+                            <nullableAnnotations>
+                                <nullableAnnotation>dev.truewinter.snowmail.NullableField</nullableAnnotation>
+                            </nullableAnnotations>
+                            <nullabilityDefinition>undefinedInlineUnion</nullabilityDefinition>
                             <outputFile>types/java.d.ts</outputFile>
                             <outputKind>module</outputKind>
                         </configuration>

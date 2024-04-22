@@ -2,6 +2,7 @@ import { ActionIcon, Group, Stack } from '@mantine/core';
 import { v4 as uuid } from 'uuid';
 import { IconPlus } from '@tabler/icons-react';
 import KeyValueInput, { type KV } from './KeyValueInput';
+import { deepCopyObjArr } from '../../util/data';
 
 interface Props {
   current: KV[],
@@ -23,7 +24,7 @@ export default function KeyValueInputs({ current, onChange }: Props) {
 
   function change(kv: KV) {
     // Deep copy the array because React expects state to be immutable
-    const newKV = current.map((o) => ({ ...o }));
+    const newKV = deepCopyObjArr(current);
     const o = newKV.find((e) => e.id === kv.id);
     o.key = kv.key;
     o.value = kv.value;
@@ -31,9 +32,15 @@ export default function KeyValueInputs({ current, onChange }: Props) {
     onChange(newKV);
   }
 
+  function del(key: string) {
+    onChange(current.filter((e) => e.id !== key));
+  }
+
   return (
     <Stack>
-      {current.map((e) => <KeyValueInput key={e.id} current={e} onChange={change} />)}
+      {current.map((e) => (
+        <KeyValueInput key={e.id} current={e} onChange={change} del={() => del(e.id)} />
+      ))}
       <Group justify="flex-end">
         <ActionIcon onClick={addInput}>
           <IconPlus />
@@ -41,19 +48,4 @@ export default function KeyValueInputs({ current, onChange }: Props) {
       </Group>
     </Stack>
   );
-}
-
-export function deserialize(obj: Record<string, string>): KV[] {
-  if (!obj) return [];
-
-  return Object.entries(obj).map((e) => ({
-    id: uuid(),
-    key: e[0],
-    value: e[1]
-  }));
-}
-
-export function serialize(kv: KV[]): Record<string, string> {
-  if (!kv) return {};
-  return kv.reduce((a, c) => ({ ...a, [c.key]: c.value }), {});
 }

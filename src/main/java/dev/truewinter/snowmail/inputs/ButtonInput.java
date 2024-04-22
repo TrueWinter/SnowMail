@@ -1,6 +1,8 @@
 package dev.truewinter.snowmail.inputs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
+import dev.truewinter.snowmail.Util;
 
 @SuppressWarnings("unused")
 public class ButtonInput extends Input.StylableInput {
@@ -38,5 +40,10 @@ public class ButtonInput extends Input.StylableInput {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    @Override
+    public boolean isValid() {
+        return !Util.isBlank(text);
     }
 }
