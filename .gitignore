@@ -39,6 +39,8 @@ build/
 node_modules
 /data
 /.env
+**/web/dist
+/plugins
 
 # Auto generated types
 types/java.d.ts

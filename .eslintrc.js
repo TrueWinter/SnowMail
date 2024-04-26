@@ -29,6 +29,7 @@ module.exports = {
     'react/destructuring-assignment': 'off',
     'react/require-default-props': 'off',
     'react/jsx-no-bind': 'off',
+    'react/prop-types': 'off',
     'operator-linebreak': 'off',
     'object-curly-newline': 'off',
     'no-restricted-globals': 'off',

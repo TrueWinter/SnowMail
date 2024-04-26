@@ -1,0 +1,8 @@
+---
+import ReactContactForm, { type ContactFormProps } from '../react/ContactForm.jsx';
+
+type Props = ContactFormProps;
+const props = Astro.props;
+---
+
+<ReactContactForm url="http://localhost:8080" id="1234" client:load />
