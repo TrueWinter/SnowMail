@@ -1,8 +1,70 @@
 ---
-import ReactContactForm, { type ContactFormProps } from '../react/ContactForm.jsx';
+import { type ContactFormProps } from '../react/ContactForm.jsx';
 
-type Props = ContactFormProps;
+interface Props extends ContactFormProps {
+  ssr?: boolean
+};
 const props = Astro.props;
+
+const providerProps = props.providerProps || {};
+const colourScheme = providerProps.defaultColorScheme || providerProps.forceColorScheme || 'light';
+
+/**
+ * Astro doesn't support React context (which is required by Mantine), so we're building using
+ * WebPack first and then using a method from that to render React to HTML for SSR and hydrating.
+ * It's a mess, but it works.
+ */
+
+import { getForm } from '../api';
+// @ts-ignore
+import { renderStatic } from '../dist/server/index.mjs';
+let inputs;
+let  form;
+if (props.ssr) {
+  inputs = await getForm(props.url, props.id);
+  form = await renderStatic({
+    url: props.url,
+    id: props.id,
+    providerProps: providerProps,
+    inputs
+  });
+}
+
+import '../dist/main/styles.css';
 ---
 
-<ReactContactForm url="http://localhost:8080" id="1234" client:load />
+<snowmail-form data-url={props.url} data-id={props.id}
+  data-provider-props={JSON.stringify(providerProps)} data-inputs={JSON.stringify(inputs)}
+  set:html={form || ''} data-ssr={props.ssr ? 'true' : 'false'}
+  data-mantine-color-scheme={colourScheme}></snowmail-form>
+
+<script>
+  class SnowMailForm extends HTMLElement {
+    constructor() {
+      super();
+
+      const commonProps = {
+        element: this,
+        url: this.dataset.url,
+        id: this.dataset.id,
+        providerProps: JSON.parse(this.dataset.providerProps || '{}'),
+      };
+
+      // Dynamic imports are used here to ensure that the hoisted JS file isn't made unnecessarily large
+      if (this.dataset.ssr === 'true') {
+        import('../dist/main/index.mjs').then((m) => {
+          m.hydrate({
+            ...commonProps,
+            inputs: this.dataset.inputs ? JSON.parse(this.dataset.inputs) : undefined
+          });
+        });
+      } else {
+        import('../dist/main/index.mjs').then((m) => {
+          m.render(commonProps);
+        });
+      }
+    }
+  }
+
+  customElements.define('snowmail-form', SnowMailForm);
+</script>

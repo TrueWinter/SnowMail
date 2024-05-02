@@ -4,19 +4,10 @@ package dev.truewinter.snowmail.api.inputs;
 public class TextAreaInput extends AbstractTextInput {
     public static final String INPUT_TYPE = "TEXTAREA";
 
-    private int cols;
     private int rows;
 
     public TextAreaInput() {
         super.setInputType(INPUT_TYPE);
-    }
-
-    public int getCols() {
-        return cols;
-    }
-
-    public void setCols(int cols) {
-        this.cols = cols;
     }
 
     public int getRows() {

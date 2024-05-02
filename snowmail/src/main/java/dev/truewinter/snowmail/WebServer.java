@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.truewinter.snowmail.api.FormSubmissionInput;
 import dev.truewinter.snowmail.api.Util;
+import dev.truewinter.snowmail.api.event.FormSavedEvent;
+import dev.truewinter.snowmail.api.event.FormSubmissionEvent;
+import dev.truewinter.snowmail.api.plugin.SnowMailPluginManager;
 import dev.truewinter.snowmail.database.Database;
 import dev.truewinter.snowmail.api.inputs.AbstractTextInput;
 import dev.truewinter.snowmail.api.inputs.TextInput;
@@ -40,11 +43,12 @@ public class WebServer extends Thread {
         server.start(Config.getInstance().getPort());
 
         server.before(ctx -> {
-            JWT jwt = JWT.fromJwt(ctx);
-
             if (ctx.path().startsWith("/public-api")) {
+                ctx.header("Access-Control-Allow-Origin", "*");
                 return;
             }
+
+            JWT jwt = JWT.fromJwt(ctx);
 
             if (ctx.path().equals("/login") || ctx.path().equals("/api/login")) {
                 if (jwt != null) {
@@ -193,6 +197,7 @@ public class WebServer extends Thread {
             }
 
             database.getFormDatabase().editForm(form);
+            SnowMailPluginManager.getInstance().getPluginManager().fireEvent(new FormSavedEvent(form));
             ctx.status(200);
         });
 
@@ -219,6 +224,13 @@ public class WebServer extends Thread {
             }
 
             ctx.json(new Response(form.get(), Views.Public.class));
+        });
+
+        server.options("/public-api/forms/{id}", ctx -> {
+            ctx.status(204)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Methods", "GET, POST")
+                    .header("Access-Control-Allow-Headers", "Content-Type, Accept");
         });
 
         server.post("/public-api/forms/{id}", ctx -> {
@@ -268,7 +280,6 @@ public class WebServer extends Thread {
                 }
             }
 
-            System.out.println(submission);
             try {
                 FormSubmissionHandler.handle(form.get(), submission);
                 ctx.status(200);

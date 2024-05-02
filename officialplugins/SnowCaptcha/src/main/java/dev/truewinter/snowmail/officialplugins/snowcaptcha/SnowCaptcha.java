@@ -27,12 +27,57 @@ public class SnowCaptcha extends SnowMailPlugin {
         renderContainer.setType("div");
         renderContainer.getCustomAttributes().put("class", "snowcaptcha");
 
-        // TODO: Change URLs
+        CustomElementInput initScript = new CustomElementInput();
+        initScript.setType("script");
+        initScript.setInnerHtml("""
+                (() => {
+                    function removeBorder() {
+                        document.getElementById('snowmail-snowcaptcha').style.border = '';
+                    }
+                    
+                    function addBorder() {
+                        document.getElementById('snowmail-snowcaptcha').style.border = '1px solid var(--mantine-color-error)';
+                    }
+
+                    window.smSnowCaptchaCallback = (status) => {
+                        if (status === 'LOADED') {
+                            const respField = document.querySelector('#snowmail-snowcaptcha [name="snowcaptcha"]');
+                            window.registerSnowMailInput('snowcaptcha', {
+                                getValue: () => respField.value,
+                                reset: () => SnowCaptcha.reset(respField.parentElement.getElementsByClassName('snowcaptcha')[0]),
+                                validate: () => {
+                                    if (!respField.value) {
+                                        addBorder();
+                                        return false;
+                                    }
+                                    
+                                    return true;
+                                }
+                            });
+                            
+                            return;
+                        }
+                        
+                        if (status === 'RESET') {
+                            removeBorder();
+                            return;
+                        }
+                        
+                        if (status !== 'SOLVED') {
+                            addBorder();
+                        } else {
+                            removeBorder();
+                        }
+                    };
+                })();
+        """);
+
         ScriptInput scriptInput = new ScriptInput();
         scriptInput.setAsync(true);
-        scriptInput.setSrc("https://snowcaptcha-cdn.binaryfrost.net/captcha.js");
-        scriptInput.getCustomAttributes().put("data-host", "https://snowcaptcha.binaryfrost.net");
+        scriptInput.setSrc("%metadata:snowcaptcha-src%");
+        scriptInput.getCustomAttributes().put("data-host", "%metadata:snowcaptcha-host%");
         scriptInput.getCustomAttributes().put("data-sitekey", "%metadata:snowcaptcha-sitekey%");
+        scriptInput.getCustomAttributes().put("data-callback", "smSnowCaptchaCallback");
 
         if (!responseField.isValid() || !renderContainer.isValid() || !scriptInput.isValid()) {
             throw new IllegalStateException("Failed to create SnowCaptcha inputs");
@@ -40,8 +85,11 @@ public class SnowCaptcha extends SnowMailPlugin {
 
         Input.MultipleInputs inputs = new Input.MultipleInputs();
         inputs.setCustomDisplayName("SnowCaptcha");
+        inputs.getCustomAttributes().put("id", "snowmail-snowcaptcha");
+        inputs.getCustomAttributes().put("style", "width: fit-content;");
         inputs.getInputs().add(responseField);
         inputs.getInputs().add(renderContainer);
+        inputs.getInputs().add(initScript);
         inputs.getInputs().add(scriptInput);
 
         getApi().registerInput(inputs);

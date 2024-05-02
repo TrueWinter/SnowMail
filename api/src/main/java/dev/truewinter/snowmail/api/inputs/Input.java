@@ -26,7 +26,7 @@ import java.util.*;
 @SuppressWarnings({"unused", "FieldMayBeFinal"})
 public abstract class Input {
     private String inputType;
-    @JsonView(Views.DashboardFull.class)
+    @JsonView({Views.DashboardFull.class, Views.Public.class})
     // Key for React
     private String rKey = UUID.randomUUID().toString();
     @JsonView(Views.DashboardFull.class)

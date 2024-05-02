@@ -175,12 +175,10 @@ const fields: FormFields = {
       mode: 'uncontrolled',
       initialValues: {
         // Null is used here so if the value is 0, the field will be blank
-        cols: input.cols || null,
         rows: input.rows || null
       },
       onValuesChange: (values: Omit<TextAreaInput, keyof (StylableInput & AbstractTextInput)>) => {
         set(input.rKey, {
-          cols: values.cols || null,
           rows: values.rows || null
         });
       }
@@ -189,7 +187,6 @@ const fields: FormFields = {
     return (
       <>
         <TextInputFields input={input} set={set}>
-          <NumberInput label="Columns" {...form.getInputProps('cols')} />
           <NumberInput label="Rows" {...form.getInputProps('rows')} />
         </TextInputFields>
         <CommonFields input={input} set={set} />

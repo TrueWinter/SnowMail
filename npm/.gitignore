@@ -1,1 +1,5 @@
+# Usually the package-lock.json file should be committed,
+# but here the package.json file is just used to provide
+# peer dependency information.
 package-lock.json
+dist

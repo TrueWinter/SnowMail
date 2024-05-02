@@ -1,2 +1,5 @@
 package-lock.json
 test
+webpack.config.cjs
+dist/*.hot-update*
+dist/main/report.html

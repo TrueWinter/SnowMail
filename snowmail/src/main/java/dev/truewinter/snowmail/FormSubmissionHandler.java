@@ -50,7 +50,7 @@ public class FormSubmissionHandler {
                     stringBuilder.append("<br />");
                 }
 
-                stringBuilder.append(value.value()).append("<br />");
+                stringBuilder.append(value.value().replace("\n", "<br />")).append("<br />");
             }
         }
 

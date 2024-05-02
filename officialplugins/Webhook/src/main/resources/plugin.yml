@@ -1,0 +1,2 @@
+name: Webhook
+main_class: dev.truewinter.snowmail.officialplugins.webhook.Webhook

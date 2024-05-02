@@ -1,8 +1,12 @@
 ---
+interface Props {
+  colorScheme?: 'light' | 'dark'
+}
+const props = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-mantine-color-scheme={props.colorScheme || 'light'}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
