@@ -1,17 +1,9 @@
 # Plugins
 
-We're using Maven here, but Gradle is also supported. First, add the Jitpack repository.
+> Usually I'd publish API modules to Jitpack, but unfortunately couldn't do that for SnowMail. I am looking into alternatives, but until then, you'll need to manually add the API module.
 
-```xml
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
-```
+Download the API module from GitHub releases.
 
-Then, add the API module. It may take a minute or two as the API module is built the first time it's requested, not in advance.
 ```xml
 <dependencies>
   <dependency>
@@ -19,7 +11,7 @@ Then, add the API module. It may take a minute or two as the API module is built
     <artifactId>api</artifactId>
     <!-- Replace VERSION with the latest version -->
     <version>VERSION</version>
-    <scope>provided</scope>
+    <system>path/to/snowmail-api-0.0.0.jar</system>
   </dependency>
 </dependencies>
 ```
