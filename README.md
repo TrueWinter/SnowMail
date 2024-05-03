@@ -71,7 +71,7 @@ Then, import the `ContactForm` component:
 
 ```jsx
 import ContactForm from 'snowmail/react/ContactForm.jsx';
-<ContactForm url="https://snowmail.example.com" id="6627b0113f4c7e0d773abc2b"></ContactForm>
+<ContactForm url="https://snowmail.example.com" id="6627b0113f4c7e0d773abc2b" />
 ```
 
 You can also pass props to the MantineProvider using the `providerProps` prop.
@@ -86,7 +86,7 @@ Astro doesn't support React contexts which are required for Mantine to work. Add
 
 ```jsx
 import ContactForm from 'snowmail/astro/ContactForm.astro';
-<ContactForm url="https://snowmail.example.com" id="6627b0113f4c7e0d773abc2b"></ContactForm>
+<ContactForm url="https://snowmail.example.com" id="6627b0113f4c7e0d773abc2b" />
 ```
 
 To enable SSR, just add the `ssr` prop. It is recommended to set the `data-mantine-color-scheme` attribute on the `html` element to either `light` or `dark` when using SSR to ensure styles are applied before hydration.
