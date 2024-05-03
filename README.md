@@ -21,8 +21,8 @@ wget https://raw.githubusercontent.com/TrueWinter/SnowMail/main/docker-compose.y
 ```
 
 Set the following environmental variables (either in the shell, in `docker-compose.yml`, or in a `.env` file):
-- APP_SECRET: A long (16-32 character) secret used for signing JWTs
-- EMAIL_FROM: The email address that all contact form submissions are sent from
+- `APP_SECRET`: A long (16-32 character) secret used for signing JWTs
+- `EMAIL_FROM`: The email address that all contact form submissions are sent from
 
 You should add the IP address(es) of your SnowMail instance to the SPF record of the `EMAIL_FROM` domain.
 
@@ -103,7 +103,7 @@ It is possible to use SnowMail on websites that don't use React or Astro by impo
 <div id="snowmail"></div>
 <script>
   import 'snowmail/dist/main/styles.css';
-  import { render } 'snowmail/dist/main/index.mjs';
+  import { render } from 'snowmail/dist/main/index.mjs';
   render({
     element: document.getElementById('snowmail'),
     url: 'https://snowmail.example.com',
