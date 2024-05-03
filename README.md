@@ -24,7 +24,7 @@ Set the following environmental variables (either in the shell, in `docker-compo
 - `APP_SECRET`: A long (16-32 character) secret used for signing JWTs
 - `EMAIL_FROM`: The email address that all contact form submissions are sent from
 
-You should add the IP address(es) of your SnowMail instance to the SPF record of the `EMAIL_FROM` domain.
+You should add the IP address(es) of your SnowMail instance to the SPF record of the `EMAIL_FROM` domain and configure reverse DNS.
 
 See [.env.example](.env.example) for the full list of environmental variables.
 
