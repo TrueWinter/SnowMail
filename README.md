@@ -57,6 +57,8 @@ If no users exist in the database, SnowMail will create a default user with the 
 
 The SnowMail dashboard allows you to easily create contact forms which can be added to websites with a few lines of code.
 
+**Important:** When creating your form, create a button with the `type` set to `submit`. Without this, users won't be able to submit the form unless you write additional code.
+
 ### React
 
 *Minimum React version: v18.2.0*
