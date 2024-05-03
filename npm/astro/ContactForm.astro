@@ -7,7 +7,7 @@ interface Props extends ContactFormProps {
 const props = Astro.props;
 
 const providerProps = props.providerProps || {};
-const colourScheme = providerProps.defaultColorScheme || providerProps.forceColorScheme || 'light';
+
 
 /**
  * Astro doesn't support React context (which is required by Mantine), so we're building using
@@ -35,8 +35,7 @@ import '../dist/main/styles.css';
 
 <snowmail-form data-url={props.url} data-id={props.id}
   data-provider-props={JSON.stringify(providerProps)} data-inputs={JSON.stringify(inputs)}
-  set:html={form || ''} data-ssr={props.ssr ? 'true' : 'false'}
-  data-mantine-color-scheme={colourScheme}></snowmail-form>
+  set:html={form || ''} data-ssr={props.ssr ? 'true' : 'false'}></snowmail-form>
 
 <script>
   class SnowMailForm extends HTMLElement {

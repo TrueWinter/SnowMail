@@ -2,7 +2,8 @@
   "name": "snowmail",
   "private": "true",
   "scripts": {
-    "dev": "cd api && mvn cz.habarta.typescript-generator:typescript-generator-maven-plugin:3.2.1263:generate@public && mvn cz.habarta.typescript-generator:typescript-generator-maven-plugin:3.2.1263:generate@all && cd .. && webpack serve --mode development"
+    "dev": "cd api && mvn cz.habarta.typescript-generator:typescript-generator-maven-plugin:3.2.1263:generate@public && mvn cz.habarta.typescript-generator:typescript-generator-maven-plugin:3.2.1263:generate@all && cd .. && webpack serve --mode development",
+    "build": "cross-env NODE_ENV=dev webpack"
   },
   "author": "TrueWinter",
   "license": "MIT",
@@ -14,6 +15,7 @@
     "@eslint/js": "^9.0.0",
     "@types/react": "^18.2.74",
     "@types/uuid": "^9.0.8",
+    "cross-env": "^7.0.3",
     "css-loader": "^7.0.0",
     "css-minimizer-webpack-plugin": "^6.0.0",
     "eslint": "^8.57.0",

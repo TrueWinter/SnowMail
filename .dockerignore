@@ -1,0 +1,12 @@
+**/.env
+**/node_modules
+**/dist
+**/target
+/plugins
+/.idea
+/build
+/data
+/npm/test
+/npm/types/public.d.ts
+/types/java.d.ts
+.github

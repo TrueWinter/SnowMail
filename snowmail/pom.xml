@@ -54,7 +54,7 @@
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
         <plugins>
-            <plugin>
+            <!--<plugin>
                 <groupId>dev.truewinter</groupId>
                 <artifactId>runcmd-maven-plugin</artifactId>
                 <version>1.5</version>
@@ -68,7 +68,58 @@
                             <envs>
                                 <env>MODE=production</env>
                             </envs>
-                            <command>npx webpack</command>
+                            <command>echo test &amp;&amp; npm install \-\-include=dev &amp;&amp; npx webpack</command>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.15.0</version>
+
+                <configuration>
+                    <nodeVersion>v18.18.0</nodeVersion>
+                </configuration>
+
+                <executions>
+                    <!-- Install in root directory -->
+                    <execution>
+                        <id>install-node-and-npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                    <execution>
+                        <id>npm-install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install --include=dev</arguments>
+                        </configuration>
+                    </execution>
+                    <!-- Install in npm directory -->
+                    <execution>
+                        <id>npm-install-npm</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install --include=dev</arguments>
+                            <workingDirectory>../npm</workingDirectory>
+                            <installDirectory>../snowmail</installDirectory>
+                        </configuration>
+                    </execution>
+                    <!-- Build -->
+                    <execution>
+                        <id>webpack-build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run build</arguments>
                         </configuration>
                     </execution>
                 </executions>
