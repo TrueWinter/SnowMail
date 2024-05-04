@@ -63,6 +63,8 @@ The SnowMail dashboard allows you to easily create contact forms which can be ad
 > [!IMPORTANT]
 > When creating your form, create a button with the `type` set to `submit`. Without this, users won't be able to submit the form unless you write additional code.
 
+It is recommended to add your `EMAIL_FROM` address (configured during the installation process) to your contact list to reduce the chance of emails ending up in spam.
+
 ### React
 
 *Minimum React version: v18.2.0*
