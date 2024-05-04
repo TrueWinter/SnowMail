@@ -35,6 +35,9 @@ services:
     image: ixdotai/smtp:v0.5.2
     restart: always
     environment:
+      - MAILNAME=${MAILNAME}
       - DKIM_KEY_PATH=/opt/dkim/rsa.private
+      # If you have Docker configured for IPv6, remove this
+      - DISABLE_IPV6=true
     volumes:
       - ./data/dkim:/opt/dkim:ro

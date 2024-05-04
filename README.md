@@ -23,10 +23,12 @@ wget https://raw.githubusercontent.com/TrueWinter/SnowMail/main/docker-compose.y
 Set the following environmental variables (either in the shell, in `docker-compose.yml`, or in a `.env` file):
 - `APP_SECRET`: A long (16-32 character) secret used for signing JWTs
 - `EMAIL_FROM`: The email address that all contact form submissions are sent from
-
-You should add the IP address(es) of your SnowMail instance to the SPF record of the `EMAIL_FROM` domain and configure reverse DNS.
+- `MAILNAME`: The (sub)domain part of `EMAIL_FROM`
 
 See [.env.example](.env.example) for the full list of environmental variables.
+
+> [!IMPORTANT]
+> You should add the IP address(es) of your SnowMail instance to the SPF record of the `EMAIL_FROM` (sub)domain and configure reverse DNS. Use a service like [mail-tester](https://www.mail-tester.com) to test your configuration.
 
 Then, start the container:
 
@@ -34,13 +36,14 @@ Then, start the container:
 docker compose up -d
 ```
 
+> [!NOTE]
 > While it is possible to run SnowMail without Docker, using Docker allows you to set up a SnowMail instance with MongoDB and an SMTP server in just a few commands.
 
 SnowMail runs on port 8025 by default. It is recommended to run SnowMail behind a reverse proxy with SSL configured.
 
 ### DKIM
 
-DKIM is optional, but recommended. To configure DKIM, run the following commands in `./data/dkim` to create new DKIM keys:
+DKIM is optional, but recommended as some email providers drop unsigned emails. To configure DKIM, run the following commands in `./data/dkim` to create new DKIM keys:
 
 ```sh
 openssl genrsa -out rsa.private 1024
@@ -57,7 +60,8 @@ If no users exist in the database, SnowMail will create a default user with the 
 
 The SnowMail dashboard allows you to easily create contact forms which can be added to websites with a few lines of code.
 
-**Important:** When creating your form, create a button with the `type` set to `submit`. Without this, users won't be able to submit the form unless you write additional code.
+> [!IMPORTANT]
+> When creating your form, create a button with the `type` set to `submit`. Without this, users won't be able to submit the form unless you write additional code.
 
 ### React
 
@@ -80,6 +84,7 @@ You can also pass props to the MantineProvider using the `providerProps` prop.
 
 If you'd like to server render SnowMail, you can pass the form definition to the inputs prop. Use the `getForm` method exported by `api.js` to get the form definition. It is recommended to set the `data-mantine-color-scheme` attribute on the `html` element to either `light` or `dark` when using SSR to ensure styles are applied before hydration.
 
+> [!TIP]
 > Already using Mantine? Use the `MantineContactForm` component instead.
 
 ### Astro
@@ -93,7 +98,8 @@ import ContactForm from 'snowmail/astro/ContactForm.astro';
 
 To enable SSR, just add the `ssr` prop. It is recommended to set the `data-mantine-color-scheme` attribute on the `html` element to either `light` or `dark` when using SSR to ensure styles are applied before hydration.
 
-**Important:** While it is possible to set the `providerProps` prop, the Astro component only supports properties that can be JSON serialized.
+> [!NOTE]
+> While it is possible to set the `providerProps` prop, the Astro component only supports properties that can be JSON serialized.
 
 ### Other
 
@@ -152,7 +158,8 @@ For information on creating your own plugins, see [PLUGINS.md](PLUGINS.md).
 
 A few official plugins are published alongside SnowMail.
 
-**Important:** Keep these plugin versions in sync with SnowMail to avoid issues.
+> [!IMPORTANT]
+> Keep these plugin versions in sync with SnowMail to avoid issues.
 
 #### SnowCaptcha
 
