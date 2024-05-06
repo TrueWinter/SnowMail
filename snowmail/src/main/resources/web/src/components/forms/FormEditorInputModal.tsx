@@ -99,15 +99,22 @@ function TextInputFields({ input, set, children }: TextInputFieldsProps) {
       <TextInput label="Label" description="The label shown in the form, in errors, and in emails"
         required {...form.getInputProps('label')} />
       <TextInput label="Name"
+        /*
+          Using span here as a paragraph element is used by default which results
+          in an error about invalid HTML.
+        */
         description={(
-          <Text c="dimmed" size="xs">The name that uniquely identifies this field when submitting
-            the form. <Text fw="bold">Special names:</Text>
+          <Text c="dimmed" size="xs" component="span">The name that uniquely identifies this field
+            when submitting the form. <Text fw="bold">Special names:</Text>
             <List>
               <List.Item><Code>name</Code>: Used as the sender name</List.Item>
               <List.Item><Code>email</Code>: Used as the Reply-To address</List.Item>
             </List>
           </Text>
         )}
+        descriptionProps={{
+          component: 'span'
+        }}
         required {...form.getInputProps('name')} />
       <TextInput label="Placeholder" {...form.getInputProps('placeholder')} />
       <NumberInput label="Max Length" {...form.getInputProps('maxLength')} />
@@ -250,7 +257,22 @@ const fields: FormFields = {
   },
   MULTIPLE: ({ input, set, remove }) => {
     const customInputs = useContext(CustomInputContext);
-    const [state, handlers] = useListState<InputUnion>(input.inputs);
+    const [state, h] = useListState<InputUnion>(input.inputs);
+    const handlers = {
+      ...h,
+      reorder: ({ from, to }) => {
+        // Copied from Mantine's useListState reorder method
+        const cloned = [...state];
+        const item = state[from];
+        cloned.splice(from, 1);
+        cloned.splice(to, 0, item);
+
+        set(input.rKey, {
+          inputs: cloned
+        });
+      }
+    };
+
     if (state !== input.inputs) {
       handlers.setState(input.inputs);
     }

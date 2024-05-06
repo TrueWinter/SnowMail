@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.truewinter.snowmail.api.FormSubmissionInput;
 import dev.truewinter.snowmail.api.Util;
 import dev.truewinter.snowmail.api.event.FormSavedEvent;
-import dev.truewinter.snowmail.api.event.FormSubmissionEvent;
 import dev.truewinter.snowmail.api.plugin.SnowMailPluginManager;
 import dev.truewinter.snowmail.database.Database;
 import dev.truewinter.snowmail.api.inputs.AbstractTextInput;
