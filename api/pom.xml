@@ -12,10 +12,6 @@
     <groupId>dev.truewinter.snowmail</groupId>
     <artifactId>api</artifactId>
 
-    <name>SnowMail</name>
-    <description> SnowMail is a contact form manager for modern websites which allows for central management of contact forms across multiple websites.</description>
-    <url>https://github.com/TrueWinter/SnowMail</url>
-
     <repositories>
         <repository>
             <id>jitpack.io</id>
