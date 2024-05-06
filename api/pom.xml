@@ -12,6 +12,30 @@
     <groupId>dev.truewinter.snowmail</groupId>
     <artifactId>api</artifactId>
 
+    <name>SnowMail</name>
+    <description> SnowMail is a contact form manager for modern websites which allows for central management of contact forms across multiple websites.</description>
+    <url>https://github.com/TrueWinter/SnowMail</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Nicholis du Toit</name>
+            <email>nicholis@truewinter.dev</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/TrueWinter/SnowMail.git</connection>
+        <developerConnection>scm:git:ssh://github.com:TrueWinter/SnowMail.git</developerConnection>
+        <url>http://github.com/TrueWinter/SnowMail</url>
+    </scm>
+
     <repositories>
         <repository>
             <id>jitpack.io</id>
@@ -123,7 +147,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <outputFile>../build//${project.artifactId}-${project.version}.jar</outputFile>
+                            <outputFile>../build/${project.artifactId}-${project.version}.jar</outputFile>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <shadedArtifactAttached>false</shadedArtifactAttached>
                             <minimizeJar>false</minimizeJar>
@@ -131,8 +155,74 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.4.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>ci-cd</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.4.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <tokenAuth>true</tokenAuth>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
