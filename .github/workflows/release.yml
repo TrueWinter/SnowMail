@@ -8,6 +8,7 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    environment: build
     steps:
       - uses: actions/checkout@v4
       - name: Docker meta
@@ -36,6 +37,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
   build:
     runs-on: ubuntu-latest
+    environment: build
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
