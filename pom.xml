@@ -15,6 +15,26 @@
         <module>officialplugins</module>
     </modules>
 
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Nicholis du Toit</name>
+            <email>nicholis@truewinter.dev</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/TrueWinter/SnowMail.git</connection>
+        <developerConnection>scm:git:ssh://github.com:TrueWinter/SnowMail.git</developerConnection>
+        <url>http://github.com/TrueWinter/SnowMail</url>
+    </scm>
+
     <build>
         <plugins>
             <plugin>
