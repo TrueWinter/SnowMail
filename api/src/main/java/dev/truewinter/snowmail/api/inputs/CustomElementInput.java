@@ -1,8 +1,6 @@
 package dev.truewinter.snowmail.api.inputs;
 
-import dev.truewinter.snowmail.api.NullableField;
 import dev.truewinter.snowmail.api.Util;
-import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
 public class CustomElementInput extends Input {
@@ -15,6 +13,9 @@ public class CustomElementInput extends Input {
         super.setInputType(INPUT_TYPE);
     }
 
+    /**
+     * @return The custom element type, by default "div"
+     */
     public String getType() {
         return type;
     }

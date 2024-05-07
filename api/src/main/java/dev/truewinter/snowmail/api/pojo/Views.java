@@ -1,5 +1,8 @@
 package dev.truewinter.snowmail.api.pojo;
 
+/**
+ * @hidden
+ */
 public class Views {
     public static abstract class View {}
 

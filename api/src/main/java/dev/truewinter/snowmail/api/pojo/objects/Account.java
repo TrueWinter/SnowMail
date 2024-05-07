@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import dev.truewinter.snowmail.api.pojo.Views;
 import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 public class Account {
     private String username;
     @JsonView(Views.Hidden.class)

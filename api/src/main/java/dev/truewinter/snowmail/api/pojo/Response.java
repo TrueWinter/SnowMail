@@ -1,7 +1,11 @@
 package dev.truewinter.snowmail.api.pojo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.jetbrains.annotations.ApiStatus;
 
+/**
+ * @hidden
+ */
 @JsonSerialize(using = APISerializer.class)
 public class Response {
     private final Object object;

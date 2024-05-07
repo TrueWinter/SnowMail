@@ -31,28 +31,49 @@ public class TextInput extends AbstractTextInput {
         super.setInputType(INPUT_TYPE);
     }
 
+    /**
+     * @return The input type, by default {@link TextInputTypes#TEXT}
+     */
     public TextInputTypes getType() {
         return type;
     }
 
+    /**
+     * {@link #getType()}
+     */
     public void setType(TextInputTypes type) {
         this.type = type;
     }
 
+    /**
+     * @return The pattern, if it exists
+     */
     @Nullable
     @NullableField
     public String getPattern() {
         return pattern;
     }
 
+    /**
+     * {@link #getPattern()}
+     */
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
+    }
+
+    /**
+     * @return The error that will be shown if the input does not match the pattern
+     */
     @Nullable
     @NullableField
     public String getPatternError() {
         return patternError;
     }
 
-    public void setPattern(String pattern, String error) {
-        this.pattern = pattern;
-        this.patternError = error;
+    /**
+     * {@link #getPatternError()}
+     */
+    public void setPatternError(String patternError) {
+        this.patternError = patternError;
     }
 }

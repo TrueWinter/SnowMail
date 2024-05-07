@@ -10,6 +10,7 @@ import dev.truewinter.snowmail.api.inputs.Input;
 import dev.truewinter.snowmail.api.pojo.Views;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.types.ObjectId;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -40,26 +41,56 @@ public class Form {
         this.inputs = inputs;
     }
 
+    /**
+     * @return The form ID
+     */
     public ObjectId getId() {
         return id;
     }
 
+    /**
+     * @return The form name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * {@link #getName()}
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return The email form submissions are sent to
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * {@link #getEmail()}
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * @return Form metadata
+     */
     public HashMap<String, String> getMetadata() {
         return metadata;
     }
 
+    /**
+     * @return The LinkedList of inputs
+     */
     public LinkedList<Input> getInputs() {
         return inputs;
     }
 
+    @ApiStatus.Internal
     public static HashMap<String, AbstractTextInput> recursivelyGetInputs(List<Input> inputs) {
         HashMap<String, AbstractTextInput> out = new HashMap<>();
 
@@ -76,6 +107,10 @@ public class Form {
         return out;
     }
 
+    /**
+     * @apiNote You should call this method before attempting to save the form
+     * @return Whether this form is valid
+     */
     @JsonIgnore
     public boolean isValid() {
         if (Util.isBlank(name) || Util.isBlank(email)) return false;

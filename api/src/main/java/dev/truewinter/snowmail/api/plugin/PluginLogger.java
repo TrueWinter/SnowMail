@@ -24,27 +24,31 @@ public class PluginLogger extends Logger {
 
     @Override
     public final void info(String s) {
-        logger.info(String.format("[%s] %s", getPluginName(), s));
+        logger.info(format(s));
     }
 
     @Override
     public void warn(String s) {
-        logger.warn(String.format("[%s] %s", getPluginName(), s));
+        logger.warn(format(s));
     }
 
     @Override
     public void warn(String s, Throwable t) {
-        logger.warn(String.format("[%s] %s", getPluginName(), s), t);
+        logger.warn(format(s), t);
     }
 
     @Override
     public final void error(String s) {
-        logger.error(String.format("[%s] %s", getPluginName(), s));
+        logger.error(format(s));
     }
 
     @Override
     public final void error(String s, Throwable t) {
-        logger.error(String.format("[%s] %s", getPluginName(), s), t);
+        logger.error(format(s), t);
+    }
+
+    private String format(String s) {
+        return String.format("[%s] %s", getPluginName(), s);
     }
 
     private static String getLogString(PluginManagerLog log) {

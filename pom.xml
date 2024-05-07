@@ -7,7 +7,7 @@
     <groupId>dev.truewinter</groupId>
     <artifactId>SnowMailProject</artifactId>
     <!-- Do not manually modify the version. Use versions:set instead -->
-    <version>0.0.3</version>
+    <version>0.1.0</version>
     <packaging>pom</packaging>
     <modules>
         <module>snowmail</module>
@@ -114,8 +114,9 @@
                             <tokenAuth>true</tokenAuth>
                             <autoPublish>true</autoPublish>
                             <excludeArtifacts>
+                                <excludeArtifact>SnowMailProject</excludeArtifact>
                                 <excludeArtifact>snowmail</excludeArtifact>
-                                <excludeArtifact>officialplugins</excludeArtifact>
+                                <excludeArtifact>OfficialPlugins</excludeArtifact>
                                 <excludeArtifact>Webhook</excludeArtifact>
                                 <excludeArtifact>SnowCaptcha</excludeArtifact>
                             </excludeArtifacts>

@@ -20,7 +20,7 @@ public class SnowMail {
         webServer.start();
 
         logger.getLogger().info("Loading plugins");
-        SnowMailPluginManager pluginManager = SnowMailPluginManager.getInstance(new API());
+        SnowMailPluginManager pluginManager = SnowMailPluginManager.getInstance(new API(database));
         pluginManager.getPluginManager().loadPlugins(Util.getPluginJars());
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

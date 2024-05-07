@@ -2,9 +2,11 @@ package dev.truewinter.snowmail.api.plugin;
 
 import dev.truewinter.PluginManager.PluginManager;
 import dev.truewinter.PluginManager.Logger;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.HashMap;
 
+@ApiStatus.Internal
 public class SnowMailPluginManager {
     private static SnowMailPluginManager snowMailPluginManager;
     private final PluginManager<SnowMailAPI> pluginManager;

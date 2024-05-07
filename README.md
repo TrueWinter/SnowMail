@@ -43,7 +43,7 @@ SnowMail runs on port 8025 by default. It is recommended to run SnowMail behind 
 
 ### DKIM
 
-DKIM is optional, but recommended as some email providers drop unsigned emails. To configure DKIM, run the following commands in `./data/dkim` to create new DKIM keys:
+DKIM is optional, but recommended as some email providers mark unsigned emails as spam. To configure DKIM, run the following commands in `./data/dkim` to create new DKIM keys:
 
 ```sh
 openssl genrsa -out rsa.private 1024
@@ -53,6 +53,17 @@ openssl rsa -in rsa.private -out rsa.public -pubout -outform PEM
 Then, create a new TXT record at `dkim._domainkey.DOMAIN_HERE` with the content `k=rsa; p=PUBLIC-KEY-HERE`.
 
 If you've already started SnowMail, run `docker compose up -d --force-recreate` to apply the changes.
+
+## Updates
+
+In most cases, you can update SnowMail just by running the following commands:
+
+```sh
+docker compose pull
+docker compose up -d
+```
+
+Read the release notes before updating as some releases may require different steps.
 
 ## Usage
 
@@ -111,7 +122,7 @@ It is possible to use SnowMail on websites that don't use React or Astro by impo
 
 ```html
 <div id="snowmail"></div>
-<script>
+<script type="module">
   import 'snowmail/dist/main/styles.css';
   import { render } from 'snowmail/dist/main/index.mjs';
   render({
@@ -172,6 +183,8 @@ You will need to set the following metadata properties:
 - `snowcaptcha-host`: URL of your SnowCaptcha instance (e.g. https://snowcaptcha.example.com)
 - `snowcaptcha-secret`: Website secret
 - `snowcaptcha-sitekey`: Website sitekey
+
+Then, add the SnowCaptcha input to the form. Leave the metadata placeholders as is, they'll be automatically replaced with the metadata values.
 
 #### Webhook
 

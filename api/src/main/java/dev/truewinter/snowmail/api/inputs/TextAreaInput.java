@@ -10,10 +10,17 @@ public class TextAreaInput extends AbstractTextInput {
         super.setInputType(INPUT_TYPE);
     }
 
+    /**
+     * @apiNote If the number of rows is 0, use the browser default
+     * @return The number of rows
+     */
     public int getRows() {
         return rows;
     }
 
+    /**
+     * {@link #getRows()}
+     */
     public void setRows(int rows) {
         this.rows = rows;
     }

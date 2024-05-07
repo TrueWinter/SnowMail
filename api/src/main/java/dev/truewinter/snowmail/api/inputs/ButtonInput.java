@@ -25,18 +25,30 @@ public class ButtonInput extends Input.StylableInput {
         super.setInputType(INPUT_TYPE);
     }
 
+    /**
+     * @return The button type, by default {@link ButtonInputTypes#BUTTON}
+     */
     public ButtonInputTypes getType() {
         return type;
     }
 
+    /**
+     * {@link #getType()}
+     */
     public void setType(ButtonInputTypes type) {
         this.type = type;
     }
 
+    /**
+     * @return The button text
+     */
     public String getText() {
         return text;
     }
 
+    /**
+     * {@link #getText()}
+     */
     public void setText(String text) {
         this.text = text;
     }
