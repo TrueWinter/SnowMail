@@ -123,7 +123,6 @@
                             <tokenAuth>true</tokenAuth>
                             <autoPublish>true</autoPublish>
                             <excludeArtifacts>
-                                <excludeArtifact>SnowMailProject</excludeArtifact>
                                 <excludeArtifact>snowmail</excludeArtifact>
                                 <excludeArtifact>OfficialPlugins</excludeArtifact>
                                 <excludeArtifact>Webhook</excludeArtifact>
