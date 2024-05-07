@@ -1,18 +1,16 @@
 # Plugins
 
-> Usually I'd publish API modules to Jitpack, but unfortunately couldn't do that for SnowMail. I am looking into alternatives, but until then, you'll need to manually add the API module.
-
-Download the API module from GitHub releases.
+The SnowMail API module is published to Maven Central.
 
 ```xml
 <dependencies>
-  <dependency>
-    <groupId>dev.truewinter.snowmail</groupId>
-    <artifactId>api</artifactId>
-    <!-- Replace VERSION with the latest version -->
-    <version>VERSION</version>
-    <system>path/to/snowmail-api-0.0.0.jar</system>
-  </dependency>
+    <dependency>
+        <groupId>dev.truewinter.snowmail</groupId>
+        <artifactId>api</artifactId>
+        <!-- Replace VERSION with the latest version -->
+        <version>VERSION</version>
+        <scope>provided</scope>
+    </dependency>
 </dependencies>
 ```
 
