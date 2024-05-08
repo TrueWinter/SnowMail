@@ -76,6 +76,8 @@ The SnowMail dashboard allows you to easily create contact forms which can be ad
 
 It is recommended to add your `EMAIL_FROM` address (configured during the installation process) to your contact list to reduce the chance of emails ending up in spam.
 
+The client-side (npm package) and server-side (Docker image/Java app) code are versioned independently.
+
 ### React
 
 *Minimum React version: v18.2.0*
@@ -162,6 +164,40 @@ If you do not use a build process that supports importing from NPM, you can use 
 ```
 
 It is recommended to replace `latest` with a specific version number in production.
+
+#### Server-Only
+
+You can also use SnowMail just to manage forms server-side and write your own client-side code for rendering and styling the form.
+
+```js
+import { getForm } from 'snowmail/api.js';
+const url = 'https://snowmail.example.com';
+const id = '6627b0113f4c7e0d773abc2b';
+
+const inputs = getForm(url, id);
+// Write your own code to render the inputs
+
+// Send the response to the server
+fetch(`${url}/public-api/forms/${id}`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json'
+  },
+  body: JSON.stringify({
+    // If you have two inputs with the names "name" and "email"
+    name: 'John Doe',
+    email: 'jdoe@example.com'
+  })
+}).then(async (resp) => {
+  if (resp.status === 200) {
+    // Email sent
+  } else {
+    const body = await resp.json();
+    // body.title contains the error message
+  }
+});
+```
 
 ## Plugins
 
