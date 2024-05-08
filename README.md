@@ -114,6 +114,15 @@ To enable SSR, just add the `ssr` prop. It is recommended to set the `data-manti
 > [!NOTE]
 > While it is possible to set the `providerProps` prop, the Astro component only supports properties that can be JSON serialized.
 
+If you use PurgeCSS, add the following to your config to prevent Mantine classes from being removed:
+```js
+{
+  safelist: {
+    deep: [/\.m_/, /mantine/]
+  }
+}
+```
+
 ### Other
 
 It is possible to use SnowMail on websites that don't use React or Astro by importing the pre-built Preact bundle.
