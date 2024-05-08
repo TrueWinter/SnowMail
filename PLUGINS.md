@@ -7,7 +7,7 @@ The SnowMail API module is published to Maven Central.
     <dependency>
         <groupId>dev.truewinter.snowmail</groupId>
         <artifactId>api</artifactId>
-        <!-- Replace VERSION with the latest version -->
+        <!-- Replace VERSION with the version of SnowMail you have installed -->
         <version>VERSION</version>
         <scope>provided</scope>
     </dependency>
