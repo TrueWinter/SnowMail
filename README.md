@@ -219,6 +219,17 @@ A few official plugins are published alongside SnowMail.
 > [!IMPORTANT]
 > Keep these plugin versions in sync with SnowMail to avoid issues.
 
+
+#### ReCAPTCHA
+
+This plugin adds a captcha widget and validation code for reCAPTCHA.
+
+You will need to set the following metadata properties:
+- `recaptcha-secret`: Website secret
+- `recaptcha-sitekey`: Website sitekey
+
+Then, add the SnowCaptcha input to the form. Leave the metadata placeholders as is, they'll be automatically replaced with the metadata values.
+
 #### SnowCaptcha
 
 This plugin adds a captcha widget and validation code for [SnowCaptcha](https://github.com/TrueWinter/SnowCaptcha/).
