@@ -1,6 +1,13 @@
 # Changelog
 _This changelog follows the (Common Changelog)[https://common-changelog.org/] conventions._
 
+## [0.1.2] - 2024-05-09
+
+### Added
+
+- Added logo on login page
+- Added icon in browser tab
+
 ## [0.1.1] - 2024-05-09
 
 ### Changed
