@@ -228,7 +228,7 @@ You will need to set the following metadata properties:
 - `recaptcha-secret`: Website secret
 - `recaptcha-sitekey`: Website sitekey
 
-Then, add the SnowCaptcha input to the form. Leave the metadata placeholders as is, they'll be automatically replaced with the metadata values.
+Then, add the reCAPTCHA input to the form. Leave the metadata placeholders as is, they'll be automatically replaced with the metadata values.
 
 #### SnowCaptcha
 
@@ -240,7 +240,7 @@ You will need to set the following metadata properties:
 - `snowcaptcha-secret`: Website secret
 - `snowcaptcha-sitekey`: Website sitekey
 
-Then, add the reCaptcha input to the form. Leave the metadata placeholders as is, they'll be automatically replaced with the metadata values.
+Then, add the SnowCaptcha input to the form. Leave the metadata placeholders as is, they'll be automatically replaced with the metadata values.
 
 #### Webhook
 
