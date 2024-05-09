@@ -1,6 +1,21 @@
 # Changelog
 _This changelog follows the (Common Changelog)[https://common-changelog.org/] conventions._
 
+## [0.1.3] - 2024-05-09
+
+### Changed
+
+- The `Form#recursivelyGetInputs` API method is no longer for internal use only
+
+### Added
+
+- Created a ReCAPTCHA plugin
+
+### Fixed
+
+- The SnowCaptcha plugin will now check if a form uses SnowCaptcha before attempting to validate the captcha token
+- When configuring a button in the dashboard, the `button` type will now be selected by default to match the server-side default
+
 ## [0.1.2] - 2024-05-09
 
 ### Added

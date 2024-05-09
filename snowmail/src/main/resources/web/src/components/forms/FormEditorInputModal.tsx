@@ -146,7 +146,7 @@ function CommonFields({ input, set }: FormFieldProps) {
 }
 
 const textTypes: TextInputTypes[] = ['text', 'email', 'number', 'password', 'tel', 'url', 'hidden'];
-const buttonTypes: ButtonInputTypes[] = ['submit', 'button', 'reset'];
+const buttonTypes: ButtonInputTypes[] = ['button', 'submit', 'reset'];
 const fields: FormFields = {
   TEXT: ({ input, set }) => {
     const form = useForm({

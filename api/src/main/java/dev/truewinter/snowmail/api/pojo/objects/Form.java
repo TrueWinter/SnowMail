@@ -90,7 +90,10 @@ public class Form {
         return inputs;
     }
 
-    @ApiStatus.Internal
+    /**
+     * Returns all the {@link AbstractTextInput}s from the Input list
+     * @return A HashMap, keyed by the input name
+     */
     public static HashMap<String, AbstractTextInput> recursivelyGetInputs(List<Input> inputs) {
         HashMap<String, AbstractTextInput> out = new HashMap<>();
 

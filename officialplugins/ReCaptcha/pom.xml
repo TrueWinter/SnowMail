@@ -9,8 +9,8 @@
         <version>0.1.3</version>
     </parent>
 
-    <groupId>dev.truewinter.snowmail.officialplugins.snowcaptcha</groupId>
-    <artifactId>SnowCaptcha</artifactId>
+    <groupId>dev.truewinter.snowmail.officialplugins.recaptcha</groupId>
+    <artifactId>ReCaptcha</artifactId>
 
     <build>
         <plugins>

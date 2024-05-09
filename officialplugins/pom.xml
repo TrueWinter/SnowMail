@@ -6,7 +6,7 @@
     <parent>
         <groupId>dev.truewinter</groupId>
         <artifactId>SnowMailProject</artifactId>
-        <version>0.1.2</version>
+        <version>0.1.3</version>
     </parent>
 
     <groupId>dev.truewinter.snowmail.officialplugins</groupId>
@@ -15,7 +15,44 @@
     <modules>
         <module>SnowCaptcha</module>
         <module>Webhook</module>
+        <module>ReCaptcha</module>
     </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>dev.truewinter.snowmail</groupId>
+            <artifactId>api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}-plugin-${project.version}</finalName>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>3.3.0</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                            <configuration>
+                                <outputFile>../../build/${project.artifactId}-plugin-${project.version}.jar</outputFile>
+                                <createDependencyReducedPom>false</createDependencyReducedPom>
+                                <shadedArtifactAttached>false</shadedArtifactAttached>
+                                <minimizeJar>false</minimizeJar>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
