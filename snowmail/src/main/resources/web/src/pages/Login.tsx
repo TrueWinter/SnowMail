@@ -1,9 +1,10 @@
-import { Paper, Stack, TextInput, Button, Center, Title, Group, Text } from '@mantine/core';
+import { Paper, Stack, TextInput, Button, Center, Title, Group, Text, Image } from '@mantine/core';
 import { type ActionFunctionArgs, Form, useActionData, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import DarkModeToggle from '../components/DarkModeToggle';
 import { HttpResponse, post, redirectAfterLogin } from '../util/api';
 import Page from '../components/Page';
+import logo from '../snowmail-icon.png';
 
 export async function action({ request }: ActionFunctionArgs) {
   return post('/api/login', await request.formData(), {
@@ -32,7 +33,10 @@ export function Component() {
         <Paper p="xl" miw="25vw" withBorder>
           <Form method="POST">
             <Stack>
-              <Title>Login</Title>
+              <Group justify="space-between">
+                <Title>Login</Title>
+                <Image src={logo} w={64} h={64} />
+              </Group>
               {data && data.status !== 200 && <Text c="red">{data.body.title}</Text>}
               <TextInput label="Username" name="username" autoComplete="username" required />
               <TextInput label="Password" name="password" type="password"

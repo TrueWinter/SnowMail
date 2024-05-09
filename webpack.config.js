@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const CopyPlugin = require('copy-webpack-plugin');
 
 /** @type {import('webpack').Configuration} */
 const dashboard = {
@@ -27,6 +28,9 @@ const dashboard = {
         'css-loader',
         'postcss-loader'
       ]
+    }, {
+      test: /\.png$/,
+      type: 'asset/resource'
     }]
   },
   devServer: {
@@ -54,6 +58,11 @@ const dashboard = {
     new MiniCssExtractPlugin(),
     new ProvidePlugin({
       React: 'react'
+    }),
+    new CopyPlugin({
+      patterns: [
+        'snowmail/src/main/resources/web/src/snowmail-icon.png'
+      ]
     })
   ]
 };
