@@ -1,6 +1,17 @@
 # Changelog
 _This changelog follows the (Common Changelog)[https://common-changelog.org/] conventions._
 
+## [0.1.1] - 2024-05-09
+
+### Changed
+
+- Blank input values are no longer included in the email
+- The Reply-To email now shows the user's name
+
+### Fixed
+
+- Fixed regular expression matching for partial matches
+
 ## [0.1.0] - 2024-05-07
 
 ### Added

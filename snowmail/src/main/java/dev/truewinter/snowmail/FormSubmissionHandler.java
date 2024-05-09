@@ -43,7 +43,7 @@ public class FormSubmissionHandler {
             String label = i.getLabel();
             FormSubmissionInput value = submission.get(i.getName());
 
-            if (value != null) {
+            if (value != null && !value.value().isBlank()) {
                 stringBuilder.append(label).append(": ");
 
                 if (input instanceof TextAreaInput) {
@@ -95,18 +95,18 @@ public class FormSubmissionHandler {
 
         Message message = new MimeMessage(session);
 
-        Address from;
-        if (submission.containsKey("name")) {
-            from = new InternetAddress(config.getEmailFrom(), submission.get("name").value());
-        } else {
-            from = new InternetAddress(config.getEmailFrom());
-        }
-
+        Address from = submission.containsKey("name") ?
+                new InternetAddress(config.getEmailFrom(), submission.get("name").value()) :
+                new InternetAddress(config.getEmailFrom());
         message.setFrom(from);
         message.setRecipient(Message.RecipientType.TO, new InternetAddress(form.getEmail()));
 
         if (submission.containsKey("email")) {
-            message.setReplyTo(new Address[]{new InternetAddress(submission.get("email").value())});
+            Address replyTo = submission.containsKey("name") ?
+                    new InternetAddress(submission.get("email").value(), submission.get("name").value()) :
+                    new InternetAddress(submission.get("email").value());
+
+            message.setReplyTo(new Address[]{replyTo});
         }
 
         message.setSubject(String.format("Message sent from %s website (%s)", form.getName(), getId()));

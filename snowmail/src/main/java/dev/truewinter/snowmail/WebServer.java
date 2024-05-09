@@ -19,6 +19,7 @@ import io.javalin.Javalin;
 import io.javalin.http.*;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class WebServer extends Thread {
     private Javalin server;
@@ -268,7 +269,7 @@ public class WebServer extends Thread {
 
                     if (input instanceof TextInput) {
                         String pattern = ((TextInput) input).getPattern();
-                        if (!Util.isBlank(pattern) && !value.value().matches(pattern)) {
+                        if (!Util.isBlank(pattern) && !Pattern.compile(pattern).matcher(value.value()).find()) {
                             String patternError = ((TextInput) input).getPatternError();
                             if (Util.isBlank(patternError)) {
                                 patternError = "Value does not match required pattern";
