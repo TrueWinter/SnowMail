@@ -126,6 +126,7 @@
                                 <excludeArtifact>snowmail</excludeArtifact>
                                 <excludeArtifact>OfficialPlugins</excludeArtifact>
                                 <excludeArtifact>Webhook</excludeArtifact>
+                                <excludeArtifact>ReCaptcha</excludeArtifact>
                                 <excludeArtifact>SnowCaptcha</excludeArtifact>
                             </excludeArtifacts>
                         </configuration>
