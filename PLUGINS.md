@@ -18,7 +18,7 @@ The SnowMail API module is published to Maven Central.
 
 ## Plugin Information File
 
-You will need to create a resource file called plugin.yml. The contents of the file should be as follows:
+You will need to create a resource file called `plugin.yml`. The contents of the file should be as follows:
 
 ```yml
 # A unique name for your plugin. Please only use alphanumeric characters and dashes.
