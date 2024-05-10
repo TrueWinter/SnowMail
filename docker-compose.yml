@@ -26,10 +26,8 @@ services:
       - ./data/mongo:/data/db
     # https://github.com/docker-library/mongo/pull/144
     healthcheck:
-      test: ["CMD-SHELL", "echo 'db.stats().ok' | mongosh --quiet || exit 1"]
-      interval: 10s
-      timeout: 10s
-      retries: 5
+      test: ["CMD-SHELL", "mongosh --eval 'db.runCommand(\"ping\").ok' --quiet || exit 1"]
+      start_interval: 5s
       start_period: 5s
   smtp:
     image: ixdotai/smtp:v0.5.2
