@@ -20,7 +20,7 @@ Download the Docker compose file from GitHub.
 wget https://raw.githubusercontent.com/TrueWinter/SnowMail/main/docker-compose.yml
 ```
 
-Set the following environmental variables (either in the shell, in `docker-compose.yml`, or in a `.env` file):
+Set the following environmental variables (either in a `.env` file, in the shell, or in `docker-compose.yml`):
 - `APP_SECRET`: A long (16-32 character) secret used for signing JWTs
 - `EMAIL_FROM`: The email address that all contact form submissions are sent from
 - `MAILNAME`: The (sub)domain part of `EMAIL_FROM`
