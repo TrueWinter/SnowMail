@@ -37,7 +37,7 @@ docker compose up -d
 ```
 
 > [!NOTE]
-> While it is possible to run SnowMail without Docker, using Docker allows you to set up a SnowMail instance with MongoDB and an SMTP server in just a few commands.
+> While it is possible to run SnowMail without Docker, using Docker allows you to set up a SnowMail instance with MongoDB and an SMTP server in just a few commands. The documentation assumes you have installed SnowMail using Docker.
 
 SnowMail runs on port 8025 by default. It is recommended to run SnowMail behind a reverse proxy with SSL configured.
 
