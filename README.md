@@ -120,7 +120,7 @@ If you use PurgeCSS, add the following to your config to prevent Mantine classes
 ```js
 {
   safelist: {
-    deep: [/\.m_/, /mantine/]
+    greedy: [/^m_/, /mantine/]
   }
 }
 ```
