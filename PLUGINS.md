@@ -1,16 +1,18 @@
 # Plugins
 
+[![javadoc](https://javadoc.io/badge2/dev.truewinter.snowmail/api/javadoc.svg)](https://javadoc.io/doc/dev.truewinter.snowmail/api)
+
 The SnowMail API module is published to Maven Central.
 
 ```xml
 <dependencies>
-    <dependency>
-        <groupId>dev.truewinter.snowmail</groupId>
-        <artifactId>api</artifactId>
-        <!-- Replace VERSION with the version of SnowMail you have installed -->
-        <version>VERSION</version>
-        <scope>provided</scope>
-    </dependency>
+  <dependency>
+    <groupId>dev.truewinter.snowmail</groupId>
+    <artifactId>api</artifactId>
+    <!-- Replace VERSION with the version of SnowMail you have installed -->
+    <version>VERSION</version>
+    <scope>provided</scope>
+  </dependency>
 </dependencies>
 ```
 
@@ -58,21 +60,78 @@ public class EventListener implements Listener {
   */
   @EventHandler
   public void onFormSubmit(FormSubmissionEvent e) {
+    // Handle the form submission
+
     /*
       Some events are cancellable. Cancelled events prevent SnowMail from
       handling the event (e.g. cancelling a FormSubmissionEvent event will
-      stop SnowMail from sending an email for the submission). You should
-      check if the event was cancelled before handling it unless you have
-      a reason to handle cancelled events.
+      stop SnowMail from sending an email for the submission) and prevent
+      other plugins from receiving the event (unless they opted to receive
+      cancelled events by passing `receiveCancelled = true` to the
+      EventHandler annotation).
     */
-    if (e.isCancelled()) return;
-
-    // Handle the form submission  
+    e.setCancelled(true);
   }
 }
 ```
 
-Note that all listeners are blocking, so please ensure your plugin does what it needs as quickly as possible.
+Note that all listeners are blocking, so please ensure your plugin does what it needs to as quickly as possible.
+
+### Example: Registering an Input
+
+```java
+// In the onLoad() method
+
+TextInput email = new TextInput();
+email.setType(TextInput.TextInputTypes.EMAIL);
+// Make sure you set the required properties
+email.setLabel("Email");
+email.setName("email");
+/*
+  Plugins can set custom display names for inputs
+  which cannot be modified through the dashboard
+  (except for the Multiple input). Modifying the
+  custom display name through the REST API is possible.
+*/
+email.setCustomDisplayName("Email");
+email.setPattern("^.+@.+\\..+$");
+email.setPatternError("Invalid email address");
+
+/*
+  You should always check if your input is valid
+  before adding it to the custom input registry.
+*/
+if (!email.isValid()) {
+  getLogger().error("Email input failed validation");
+  return;
+}
+
+getApi().registerInput(email);
+```
+
+> [!NOTE]
+> At this time, a custom input can only be used once in a form.
+
+
+### Example: Plugin with Config File
+
+SnowMail uses [BoostedYAML](https://dejvokep.gitbook.io/boostedyaml) for plugin configuration files. Add a `config.yml` file in your plugin's resources with your configuration defaults.
+
+```yml
+# config.yml
+
+foo: bar
+```
+
+```java
+// In the onLoad() method
+
+// Default config file copied to `data/plugins/{plugin_name}/config.yml
+copyDefaultConfig();
+YamlDocument config = YamlDocument.create(getConfig());
+// The value of foo is "bar"
+String foo = config.getString("foo");
+```
 
 ### Using Other Installed Plugins
 
