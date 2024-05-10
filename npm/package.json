@@ -1,13 +1,11 @@
 {
   "name": "snowmail",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "type": "module",
   "peerDependencies": {
     "@mantine/core": "^7.8.1",
     "@mantine/form": "^7.8.1",
     "astro": ">= 3.0.0",
-    "preact": "^10.21.0",
-    "preact-render-to-string": "^6.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -19,12 +17,6 @@
       "optional": true
     },
     "react-dom": {
-      "optional": true
-    },
-    "preact": {
-      "optional": true
-    },
-    "preact-render-to-string": {
       "optional": true
     }
   },
