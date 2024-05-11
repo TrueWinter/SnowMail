@@ -76,6 +76,12 @@ The SnowMail dashboard allows you to easily create contact forms which can be ad
 
 It is recommended to add your `EMAIL_FROM` address (configured during the installation process) to your contact list to reduce the chance of emails ending up in spam.
 
+You'll need to install SnowMail from NPM (or use the [CDN option](#cdn)):
+
+```sh
+npm install --save snowmail
+```
+
 The client-side (npm package) and server-side (Docker image/Java app) code are versioned independently.
 
 ### React
