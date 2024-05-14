@@ -1,5 +1,6 @@
 # Changelog
-_This changelog follows the (Common Changelog)[https://common-changelog.org/] conventions._
+
+_This changelog follows the [Common Changelog](https://common-changelog.org/) conventions._
 
 ## [0.1.4] - 2024-05-14
 
