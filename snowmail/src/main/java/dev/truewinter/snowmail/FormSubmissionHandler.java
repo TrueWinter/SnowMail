@@ -15,8 +15,10 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Properties;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FormSubmissionHandler {
     public static void handle(Form form, HashMap<String, FormSubmissionInput> submission) {
@@ -54,7 +56,17 @@ public class FormSubmissionHandler {
             }
         }
 
-        return stringBuilder.toString();
+        return String.format("""
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                </head>
+                <body>
+                    %s
+                </body>
+            </html>
+            """, stringBuilder);
     }
 
     private static void email(Form form, HashMap<String, FormSubmissionInput> submission) throws MessagingException, UnsupportedEncodingException {
@@ -68,7 +80,6 @@ public class FormSubmissionHandler {
 
         properties.put("mail.smtp.host", config.getSmtpHost());
         properties.put("mail.smtp.port", config.getSmtpPort());
-
 
         switch (config.getSmtpEncryption()) {
             case SSL:
@@ -93,7 +104,7 @@ public class FormSubmissionHandler {
             session = Session.getInstance(properties);
         }
 
-        Message message = new MimeMessage(session);
+        Message message = new MailMessage(session, config.getEmailFrom());
 
         Address from = submission.containsKey("name") ?
                 new InternetAddress(config.getEmailFrom(), submission.get("name").value()) :
@@ -117,5 +128,47 @@ public class FormSubmissionHandler {
     private static String getId() {
         int time = (int) (System.currentTimeMillis() / 1000);
         return Integer.toHexString(time);
+    }
+
+    private static class MailMessage extends MimeMessage {
+        private final String domain;
+        private static int seconds = 0;
+        private static final AtomicInteger counter = new AtomicInteger(0);
+
+        public MailMessage(Session session, String email) {
+            super(session);
+            if (!email.contains("@")) {
+                throw new IllegalArgumentException("Invalid email address");
+            }
+
+            domain = email.split("@")[1];
+        }
+
+        private String getHostname() {
+            try {
+                return InetAddress.getLocalHost().getHostName();
+            } catch (UnknownHostException ignored) {
+                return "snowmail";
+            }
+        }
+
+        private String getId() {
+            int currentTime = (int) (System.currentTimeMillis() / 1000);
+            if (seconds != currentTime) {
+                seconds = currentTime;
+                counter.set(0);
+            }
+
+            return String.format("%d.%d", seconds, counter.incrementAndGet());
+        }
+
+        private String getMessageId() {
+            return String.format("%s.%s@%s", getHostname(), getId(), domain);
+        }
+
+        @Override
+        protected void updateMessageID() throws MessagingException {
+            setHeader("Message-ID", "<" + getMessageId() + ">");
+        }
     }
 }

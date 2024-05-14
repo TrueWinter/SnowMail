@@ -1,6 +1,12 @@
 # Changelog
 _This changelog follows the (Common Changelog)[https://common-changelog.org/] conventions._
 
+## [0.1.4] - 2024-05-14
+
+### Changed
+
+- Properly format messages and message ID header
+
 ## [0.1.3] - 2024-05-09
 
 ### Changed
