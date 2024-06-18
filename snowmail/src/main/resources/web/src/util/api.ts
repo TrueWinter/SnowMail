@@ -1,3 +1,4 @@
+import { AccountRole } from '#types/java';
 import { router } from '../router';
 
 let redirectUrl = '/';
@@ -28,7 +29,7 @@ type Request = RequestWithData | RequestWithoutData
 
 export interface HttpResponse {
   status: number
-  body: Record<string, any>
+  body: any
 }
 
 async function request(opts: Request): Promise<HttpResponse> {
@@ -127,7 +128,15 @@ export async function ensureUserIsLoggedIn(): Promise<HttpResponse> {
   return get('/api/is-logged-in');
 }
 
-export function getUsername(): string {
+function getJWT(): Record<string, any> | null {
   const jwt = localStorage.getItem('token');
-  return jwt ? JSON.parse(atob(jwt.split('.')[1])).username : null;
+  return jwt ? JSON.parse(atob(jwt.split('.')[1])) : null;
+}
+
+export function getUsername(): string {
+  return getJWT()?.username || null;
+}
+
+export function getRole(): AccountRole {
+  return getJWT()?.role || null;
 }

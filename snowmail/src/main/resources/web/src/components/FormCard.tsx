@@ -4,7 +4,7 @@ import { IconTrash } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import { type FormSummary } from '../pages/Forms';
-import { del } from '../util/api';
+import { del, getRole } from '../util/api';
 
 interface Props {
   data: FormSummary
@@ -12,6 +12,7 @@ interface Props {
 
 export default function FormCard({ data }: Props) {
   const navigate = useNavigate();
+  const role = getRole();
 
   function showDeleteModal() {
     modals.openConfirmModal({
@@ -25,11 +26,18 @@ export default function FormCard({ data }: Props) {
         color: 'red'
       },
       onConfirm: () => {
-        del(`/api/forms/${data.id}`).then(() => {
-          notifications.show({
-            message: 'Form deleted'
-          });
-          navigate('/');
+        del(`/api/forms/${data.id}`).then((d) => {
+          if (d.status === 200) {
+            notifications.show({
+              message: 'Form deleted'
+            });
+            navigate('/');
+          } else {
+            notifications.show({
+              message: `Failed to delete form. Error code: ${d.status}`,
+              color: 'red'
+            });
+          }
         });
       }
     });
@@ -52,9 +60,11 @@ export default function FormCard({ data }: Props) {
         <Grid.Col span={{ sm: 12, md: 4 }}>
           <Group justify="center">
             <Button component={Link} to={`/forms/edit/${data.id}`}>Edit</Button>
-            <ActionIcon size="lg" color="red" onClick={showDeleteModal}>
-              <IconTrash />
-            </ActionIcon>
+            {role === 'ADMIN' && (
+              <ActionIcon size="lg" color="red" onClick={showDeleteModal}>
+                <IconTrash />
+              </ActionIcon>
+            )}
           </Group>
         </Grid.Col>
       </Grid>

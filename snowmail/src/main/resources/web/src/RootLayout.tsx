@@ -6,18 +6,20 @@ import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { PropsWithChildren } from 'react';
 import NavLink from './components/NavLink';
 import DarkModeToggle from './components/DarkModeToggle';
-import { getUsername } from './util/api';
+import { getRole, getUsername } from './util/api';
 
 interface Links {
   label: string
   to: string
+  adminOnly?: boolean
 }
 const links: Links[] = [{
   label: 'Forms',
   to: '/forms'
 }, {
   label: 'Accounts',
-  to: '/accounts'
+  to: '/accounts',
+  adminOnly: true
 }];
 
 function MainContent(props: PropsWithChildren) {
@@ -56,6 +58,7 @@ export function Component() {
   });
 
   const username = getUsername();
+  const role = getRole();
 
   const rightNavLinks = (
     <>
@@ -74,7 +77,8 @@ export function Component() {
   );
   const nav = (
     <Flex gap="md" direction={mobile ? 'column' : 'row'}>
-      {links.map((e) => <NavLink key={e.to} {...e} />)}
+      {links.filter((e) => !(e.adminOnly && role !== 'ADMIN'))
+        .map((e) => <NavLink key={e.to} {...e} />)}
       {mobile && rightNavLinks}
     </Flex>
   );

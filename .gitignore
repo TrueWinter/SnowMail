@@ -43,6 +43,7 @@ node_modules
 /plugins
 **/node
 settings.xml
+UPCOMING.md
 
 # Auto generated types
 types/java.d.ts

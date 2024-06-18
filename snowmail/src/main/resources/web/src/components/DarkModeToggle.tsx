@@ -7,7 +7,7 @@ export default function DarkModeToggle() {
   const toggleColorScheme = () => setColorScheme(computedColorSchme === 'dark' ? 'light' : 'dark');
 
   return (
-    <ActionIcon size="lg" bg="gray" c="white" onClick={toggleColorScheme}>
+    <ActionIcon size="lg" color="gray" c="white" onClick={toggleColorScheme}>
       {colorScheme === 'dark' ? <IconSun /> : <IconMoon />}
     </ActionIcon>
   );

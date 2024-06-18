@@ -3,6 +3,7 @@ package dev.truewinter.snowmail;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.truewinter.snowmail.api.FormSubmissionInput;
 import dev.truewinter.snowmail.api.Util;
@@ -18,6 +19,7 @@ import dev.truewinter.snowmail.api.pojo.Views;
 import io.javalin.Javalin;
 import io.javalin.http.*;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -75,7 +77,7 @@ public class WebServer extends Thread {
 
             database.getAccountDatabase().getAccountIfPasswordIsCorrect(username, password).ifPresentOrElse(a -> {
                 ObjectNode node = new ObjectMapper().createObjectNode();
-                node.put("token", JWT.create(username).toJwt());
+                node.put("token", JWT.create(a).toJwt());
                 ctx.json(node);
             }, () -> {
                 throw new UnauthorizedResponse("Invalid username or password");
@@ -83,10 +85,18 @@ public class WebServer extends Thread {
         });
 
         server.get("/api/accounts", ctx -> {
+            if (!Objects.requireNonNull(JWT.fromJwt(ctx)).role().equals(Account.AccountRole.ADMIN)) {
+                throw new ForbiddenResponse();
+            }
+
             ctx.json(new Response(database.getAccountDatabase().getAccounts(), Views.DashboardFull.class));
         });
 
         server.post("/api/accounts", ctx -> {
+            if (!Objects.requireNonNull(JWT.fromJwt(ctx)).role().equals(Account.AccountRole.ADMIN)) {
+                throw new ForbiddenResponse();
+            }
+
             JsonNode body = requestToJson(ctx);
             if (!body.hasNonNull("username") || !body.hasNonNull("password") ||
                     !body.hasNonNull("confirm-password")) {
@@ -96,6 +106,8 @@ public class WebServer extends Thread {
             String username = body.get("username").asText();
             String password = body.get("password").asText();
             String confirmPassword = body.get("confirm-password").asText();
+            Account.AccountRole role = Account.AccountRole.valueOf(body.get("role").asText());
+            ArrayList<String> forms = new ObjectMapper().readerForListOf(String.class).readValue(body.get("forms"));
 
             if (!password.equals(confirmPassword)) {
                 throw new BadRequestResponse("Passwords do not match");
@@ -105,20 +117,30 @@ public class WebServer extends Thread {
                 throw new BadRequestResponse("An account with that username already exists");
             }
 
-            Account account = new Account(username, password, false);
+            Account account = new Account(username, password, false, role, forms);
             database.getAccountDatabase().createOrEditAccount(account);
 
             ctx.status(200);
         });
 
         server.get("/api/accounts/{username}", ctx -> {
+            JWT jwt = Objects.requireNonNull(JWT.fromJwt(ctx));
+            if (!jwt.role().equals(Account.AccountRole.ADMIN) && !ctx.pathParam("username").equals(jwt.username())) {
+                throw new ForbiddenResponse();
+            }
+
             Optional<Account> account = database.getAccountDatabase().getAccount(ctx.pathParam("username"));
             account.ifPresentOrElse(a -> ctx.json(new Response(a, Views.DashboardFull.class)), () -> {
                 throw new NotFoundResponse("Account not found");
             });
         });
 
-        server.patch("/api/accounts/{username}", ctx -> {
+        server.put("/api/accounts/{username}", ctx -> {
+            JWT jwt = Objects.requireNonNull(JWT.fromJwt(ctx));
+            if (!jwt.role().equals(Account.AccountRole.ADMIN) && !ctx.pathParam("username").equals(jwt.username())) {
+                throw new ForbiddenResponse();
+            }
+
             JsonNode body = requestToJson(ctx);
             if (!body.hasNonNull("password") || !body.hasNonNull("confirm-password")) {
                 throw new BadRequestResponse("All fields are required");
@@ -126,17 +148,30 @@ public class WebServer extends Thread {
 
             Optional<Account> account = database.getAccountDatabase().getAccount(ctx.pathParam("username"));
             account.ifPresentOrElse(a -> {
-                String password = body.get("password").asText();
-                String confirmPassword = body.get("confirm-password").asText();
-
-                if (!password.equals(confirmPassword)) {
-                    throw new BadRequestResponse("Passwords do not match");
-                }
-
-                a.setPassword(password, false);
                 try {
+                    String password = body.get("password").asText();
+                    String confirmPassword = body.get("confirm-password").asText();
+
+                    if (!password.isBlank()) {
+                        if (!password.equals(confirmPassword)) {
+                            throw new BadRequestResponse("Passwords do not match");
+                        }
+
+                        a.setPassword(password, false);
+                    }
+
+                    if (Objects.requireNonNull(JWT.fromJwt(ctx)).role().equals(Account.AccountRole.ADMIN)) {
+                        Account.AccountRole role = Account.AccountRole.valueOf(body.get("role").asText());
+                        ArrayList<String> forms = new ObjectMapper().readerForListOf(String.class)
+                                .readValue(body.get("forms"));
+
+                        a.setRole(role);
+                        a.getForms().clear();
+                        a.getForms().addAll(forms);
+                    }
+
                     database.getAccountDatabase().createOrEditAccount(a);
-                } catch (JsonProcessingException e) {
+                } catch (IOException e) {
                     throw new InternalServerErrorResponse(e.getMessage());
                 }
 
@@ -147,6 +182,10 @@ public class WebServer extends Thread {
         });
 
         server.delete("/api/accounts/{username}", ctx -> {
+            if (!Objects.requireNonNull(JWT.fromJwt(ctx)).role().equals(Account.AccountRole.ADMIN)) {
+                throw new ForbiddenResponse();
+            }
+
             Optional<Account> account = database.getAccountDatabase().getAccount(ctx.pathParam("username"));
             account.ifPresentOrElse(a -> {
                 database.getAccountDatabase().deleteAccount(a.getUsername());
@@ -161,10 +200,18 @@ public class WebServer extends Thread {
         });
 
         server.get("/api/forms", ctx -> {
-            ctx.json(new Response(database.getFormDatabase().getForms(), Views.DashboardSummary.class));
+            JWT jwt = Objects.requireNonNull(JWT.fromJwt(ctx));
+            List<Form> forms = database.getFormDatabase().getForms();
+            List<Form> permittedForms = jwt.role().equals(Account.AccountRole.ADMIN) ? forms :
+                    forms.stream().filter(form -> jwt.forms().contains(form.getId().toHexString())).toList();
+            ctx.json(new Response(permittedForms, Views.DashboardSummary.class));
         });
 
         server.post("/api/forms", ctx -> {
+            if (!Objects.requireNonNull(JWT.fromJwt(ctx)).role().equals(Account.AccountRole.ADMIN)) {
+                throw new ForbiddenResponse();
+            }
+
             Form form = ctx.bodyAsClass(Form.class);
             if (!form.isValid()) {
                 throw new BadRequestResponse();
@@ -176,6 +223,11 @@ public class WebServer extends Thread {
         });
 
         server.get("/api/forms/{id}", ctx -> {
+            JWT jwt = Objects.requireNonNull(JWT.fromJwt(ctx));
+            if (!jwt.role().equals(Account.AccountRole.ADMIN) && !jwt.forms().contains(ctx.pathParam("id"))) {
+                throw new ForbiddenResponse();
+            }
+
             String id = ctx.pathParam("id");
             Optional<Form> form = database.getFormDatabase().getForm(id);
             if (form.isEmpty()) {
@@ -186,6 +238,11 @@ public class WebServer extends Thread {
         });
 
         server.put("/api/forms/{id}", ctx -> {
+            JWT jwt = Objects.requireNonNull(JWT.fromJwt(ctx));
+            if (!jwt.role().equals(Account.AccountRole.ADMIN) && !jwt.forms().contains(ctx.pathParam("id"))) {
+                throw new ForbiddenResponse();
+            }
+
             String id = ctx.pathParam("id");
             if (!database.getFormDatabase().formExists(id)) {
                 throw new NotFoundResponse();
@@ -202,6 +259,10 @@ public class WebServer extends Thread {
         });
 
         server.delete("/api/forms/{id}", ctx -> {
+            if (!Objects.requireNonNull(JWT.fromJwt(ctx)).role().equals(Account.AccountRole.ADMIN)) {
+                throw new ForbiddenResponse();
+            }
+
             String id = ctx.pathParam("id");
             Optional<Form> form = database.getFormDatabase().getForm(id);
             if (form.isEmpty()) {

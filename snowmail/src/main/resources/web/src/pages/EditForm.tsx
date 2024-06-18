@@ -14,17 +14,26 @@ export function Component() {
 
   useEffect(() => {
     get(`/api/forms/${params.id}`).then((d) => {
-      if (d.status === 404) {
-        notifications.show({
-          message: `Form ${params.id} does not exist`,
-          color: 'red'
-        });
+      switch (d.status) {
+        case 403:
+          notifications.show({
+            message: 'You do not have permission to access that form',
+            color: 'red'
+          });
 
-        navigate('/');
-        return;
+          navigate('/');
+          break;
+        case 404:
+          notifications.show({
+            message: `Form ${params.id} does not exist`,
+            color: 'red'
+          });
+
+          navigate('/');
+          break;
+        default:
+          setForm(d.body as Form);
       }
-
-      setForm(d.body as Form);
     });
   }, []);
 

@@ -28,7 +28,7 @@ public class AccountDatabase {
         if (collection.countDocuments() == 0) {
             IndexOptions indexOptions = new IndexOptions().unique(true);
             collection.createIndex(Indexes.ascending("username"), indexOptions);
-            createOrEditAccount(new Account("admin", "snowmail", false));
+            createOrEditAccount(new Account("admin", "snowmail", false, Account.AccountRole.ADMIN, new ArrayList<>()));
         }
     }
 
