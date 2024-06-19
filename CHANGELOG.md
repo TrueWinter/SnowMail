@@ -2,6 +2,21 @@
 
 _This changelog follows the [Common Changelog](https://common-changelog.org/) conventions._
 
+## [0.2.0] - 2024-06-19
+
+### Changed
+
+- Emails that are too long to display on one line on the forms page will now be truncated. Hovering over it will show the full email.
+
+### Added
+
+- Added account permissions
+- Added OpenID Connect SSO
+
+### Fixed
+
+- Fixed the background of some buttons not changing colour on hover
+
 ## [0.1.4] - 2024-05-14
 
 ### Changed
