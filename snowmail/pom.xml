@@ -54,13 +54,6 @@
         </dependency>
     </dependencies>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>jitpack</id>
-            <url>https://jitpack.io</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
         <plugins>
