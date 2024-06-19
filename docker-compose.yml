@@ -17,8 +17,9 @@ services:
       # Either modify the APP_SECRET and EMAIL_FROM here or in a .env file
       - APP_SECRET=${APP_SECRET}
       - EMAIL_FROM=${EMAIL_FROM}
-      - MONGO_DB=mongodb://mongo:27017
-      - SMTP_HOST=smtp
+      - MONGO_DB=${MONGO_DB:-mongodb://mongo:27017}
+      - SMTP_HOST=${SMTP_HOST:-smtp}
+    env_file: ".env"
   mongo:
     image: mongo:7.0.8
     restart: always
