@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Card, Center, Grid, Group, Stack, Text } from '@mantine/core';
+import { ActionIcon, Button, Card, Center, Grid, Group, Stack, Text, Tooltip } from '@mantine/core';
 import { Link, useNavigate } from 'react-router-dom';
 import { IconTrash } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
@@ -54,7 +54,9 @@ export default function FormCard({ data }: Props) {
         <Grid.Col span={{ sm: 12, md: 4 }}>
           <Stack gap="xs">
             <Text>Name: {data.name}</Text>
-            <Text>Email: {data.email}</Text>
+            <Tooltip label={data.email}>
+              <Text truncate="end">Email: {data.email}</Text>
+            </Tooltip>
           </Stack>
         </Grid.Col>
         <Grid.Col span={{ sm: 12, md: 4 }}>

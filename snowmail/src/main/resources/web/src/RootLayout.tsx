@@ -78,7 +78,7 @@ export function Component() {
   const nav = (
     <Flex gap="md" direction={mobile ? 'column' : 'row'}>
       {links.filter((e) => !(e.adminOnly && role !== 'ADMIN'))
-        .map((e) => <NavLink key={e.to} {...e} />)}
+        .map((e) => <NavLink key={e.to} label={e.label} to={e.to} />)}
       {mobile && rightNavLinks}
     </Flex>
   );
