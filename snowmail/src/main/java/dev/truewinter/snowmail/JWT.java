@@ -15,6 +15,11 @@ import java.util.List;
 public record JWT(@Nullable String username, @NotNull Account.AccountRole role, @NotNull List<String> forms) {
     private static final int EXPIRES_IN = 24 * 60 * 60;
 
+    // For SSO
+    public static JWT create(Account.AccountRole role, List<String> forms) {
+        return new JWT(null, role, forms);
+    }
+
     public static JWT create(Account account) {
         return new JWT(account.getUsername(), account.getRole(), account.getForms());
     }

@@ -15,6 +15,14 @@ public class Config {
     private final String smtpUser;
     private final String smtpPassword;
     private final int smtpTimeout;
+    private final boolean ssoEnabled;
+    private final boolean ssoForceRedirect;
+    private final String ssoClientId;
+    private final String ssoClientSecret;
+    private final String ssoAuthUrl;
+    private final String ssoTokenURL;
+    private final String ssoUserInfoUrl;
+    private final String ssoLogoutUrl;
 
     private Config() {
         Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
@@ -28,6 +36,14 @@ public class Config {
         this.smtpUser = dotenv.get("SMTP_USER");
         this.smtpPassword = dotenv.get("SMTP_PASSWORD");
         this.smtpTimeout = Integer.parseInt(dotenv.get("SMTP_TIMEOUT", "15000"));
+        this.ssoEnabled = dotenv.get("SSO_ENABLED", "false").equals("true");
+        this.ssoForceRedirect = dotenv.get("SSO_FORCE_REDIRECT", "false").equals("true");
+        this.ssoClientId = dotenv.get("SSO_CLIENT_ID");
+        this.ssoClientSecret = dotenv.get("SSO_CLIENT_SECRET");
+        this.ssoAuthUrl = dotenv.get("SSO_AUTH_URL");
+        this.ssoTokenURL = dotenv.get("SSO_TOKEN_URL");
+        this.ssoUserInfoUrl = dotenv.get("SSO_USERINFO_URL");
+        this.ssoLogoutUrl = dotenv.get("SSO_LOGOUT_URL");
 
         if (Util.isBlank(this.secret, this.mongodb, emailFrom, smtpHost)) {
             Logger.getInstance().getLogger().error("Missing required configuration option(s)");
@@ -81,6 +97,38 @@ public class Config {
 
     public int getSmtpTimeout() {
         return smtpTimeout;
+    }
+
+    public boolean isSsoEnabled() {
+        return ssoEnabled;
+    }
+
+    public boolean isSsoForceRedirect() {
+        return ssoForceRedirect;
+    }
+
+    public String getSsoClientId() {
+        return ssoClientId;
+    }
+
+    public String getSsoClientSecret() {
+        return ssoClientSecret;
+    }
+
+    public String getSsoAuthUrl() {
+        return ssoAuthUrl;
+    }
+
+    public String getSsoTokenURL() {
+        return ssoTokenURL;
+    }
+
+    public String getSsoUserInfoUrl() {
+        return ssoUserInfoUrl;
+    }
+
+    public String getSsoLogoutUrl() {
+        return ssoLogoutUrl;
     }
 
     public enum SMTP_ENCRYPTION {

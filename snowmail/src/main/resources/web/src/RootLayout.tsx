@@ -62,8 +62,10 @@ export function Component() {
 
   const rightNavLinks = (
     <>
-      <MantineNavLink label="My Account" component={Link}
-        to={username ? `/accounts/edit/${username}` : null} />
+      {username && (
+        <MantineNavLink label="My Account" component={Link}
+          to={username ? `/accounts/edit/${username}` : null} />
+      )}
       <MantineNavLink
         w="fit-content"
         label="Logout"

@@ -15,10 +15,13 @@ export async function action({ request }: ActionFunctionArgs) {
 export function Component() {
   const navigate = useNavigate();
   const data = useActionData() as HttpResponse;
+  const ssoConfig = JSON.parse(document.getElementById('app').dataset.sso) || {};
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
       navigate('/');
+    } else if (ssoConfig.forceRedirect) {
+      location.href = '/login/sso';
     }
 
     if (data && data.status === 200) {
@@ -29,28 +32,32 @@ export function Component() {
 
   return (
     <Page>
-      <Center h="100vh">
-        <Paper p="xl" miw="25vw" withBorder>
-          <Form method="POST">
-            <Stack>
-              <Group justify="space-between">
-                <Title>Login</Title>
-                <Image src={logo} w={64} h={64} />
-              </Group>
-              {data && data.status !== 200 && <Text c="red">{data.body.title}</Text>}
-              <TextInput label="Username" name="username" autoComplete="username" required />
-              <TextInput label="Password" name="password" type="password"
-                autoComplete="current-password" required />
-              <Group>
-                <Button type="submit" style={{
-                  flexGrow: 1
-                }}>Login</Button>
-                <DarkModeToggle />
-              </Group>
-            </Stack>
-          </Form>
-        </Paper>
-      </Center>
+      {!ssoConfig.forceRedirect && (
+        <Center h="100vh">
+          <Paper p="xl" miw="25vw" withBorder>
+            <Form method="POST">
+              <Stack>
+                <Group justify="space-between">
+                  <Title>Login</Title>
+                  <Image src={logo} w={64} h={64} />
+                </Group>
+                {data && data.status !== 200 && <Text c="red">{data.body.title}</Text>}
+                <TextInput label="Username" name="username" autoComplete="username" required />
+                <TextInput label="Password" name="password" type="password"
+                  autoComplete="current-password" required />
+                <Group>
+                  <Group grow flex="1" preventGrowOverflow={false}>
+                    <Button type="submit">Login</Button>
+                    {ssoConfig.enabled &&
+                    <Button color="teal" component="a" href="/login/sso">Login with SSO</Button>}
+                  </Group>
+                  <DarkModeToggle />
+                </Group>
+              </Stack>
+            </Form>
+          </Paper>
+          </Center>
+      )}
     </Page>
   );
 }

@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react';
 import { IconPlus } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { get, getRole } from '../util/api';
-import FormCard from '../components/FormCard';
 import ListCardSkeleton from '../components/ListCardSkeleton';
 import Page from '../components/Page';
+import FormList from '../components/FormList';
 
 export interface FormSummary {
   id: string
@@ -36,8 +36,7 @@ export function Component() {
         )}
       </Group>
       <Stack>
-        {loading ? <ListCardSkeleton /> :
-          forms.map((form) => <FormCard key={form.id} data={form} />)}
+        {loading ? <ListCardSkeleton /> : <FormList forms={forms} />}
       </Stack>
     </Page>
   );

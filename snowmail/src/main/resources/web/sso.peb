@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="robots" content="noindex" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/png" href="/snowmail-icon.png" />
+        <title>SnowMail</title>
+    </head>
+    <body data-token="{{ jwt }}">
+        <p>Please wait...</p>
+        <script>
+            const token = document.body.dataset.token;
+            localStorage.setItem('token', token);
+            location.href = '/login';
+        </script>
+    </body>
+</html>
