@@ -1,5 +1,5 @@
 import { render } from 'preact-render-to-string';
-import ContactForm from '../react/ContactForm';
+import { makeForm } from '.';
 
 /** @param {import('.').ServerOpts} opts  */
 export async function renderStatic(opts) {
@@ -7,6 +7,5 @@ export async function renderStatic(opts) {
     throw new Error('This function can only be called on the server');
   }
 
-  return render(<ContactForm url={opts.url} id={opts.id} providerProps={opts.providerProps}
-    inputs={opts.inputs} />);
+  return render(makeForm(opts));
 }

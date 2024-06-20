@@ -26,27 +26,47 @@ if (props.ssr) {
     url: props.url,
     id: props.id,
     providerProps: providerProps,
-    inputs
+    inputs,
+    handler: props.handler,
+    afterSubmit: props.afterSubmit
   });
 }
+
+const handler = props.handler?.toString();
+const afterSubmit = props.afterSubmit?.toString();
 
 import '../dist/main/styles.css';
 ---
 
 <snowmail-form data-url={props.url} data-id={props.id}
   data-provider-props={JSON.stringify(providerProps)} data-inputs={JSON.stringify(inputs)}
-  set:html={form || ''} data-ssr={props.ssr ? 'true' : 'false'}></snowmail-form>
+  set:html={form || ''} data-ssr={props.ssr ? 'true' : 'false'}
+  data-handler={handler} data-after-submit={afterSubmit}></snowmail-form>
 
 <script>
+  import type { ContactFormProps } from '../react/ContactForm';
+
+  function deserializeFunction(fn: string | undefined) {
+    // Probably the weirdest workaround I've ever done in JS
+    // https://stackoverflow.com/a/45676430
+    return fn ? new Function('return ' + fn)() : undefined
+  }
+
   class SnowMailForm extends HTMLElement {
     constructor() {
       super();
 
-      const commonProps = {
+      interface FormProps extends ContactFormProps {
+        element: Element
+      }
+
+      const commonProps: FormProps = {
         element: this,
-        url: this.dataset.url,
-        id: this.dataset.id,
+        url: this.dataset.url as string,
+        id: this.dataset.id as string,
         providerProps: JSON.parse(this.dataset.providerProps || '{}'),
+        handler: deserializeFunction(this.dataset.handler),
+        afterSubmit: deserializeFunction(this.dataset.afterSubmit)
       };
 
       // Dynamic imports are used here to ensure that the hoisted JS file isn't made unnecessarily large

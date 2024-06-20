@@ -25,8 +25,6 @@ export default function MantineContactForm(props) {
     }
   }, []);
 
-  // console.log(formState, form, error);
-
   function scrollToFormTop() {
     if (formRef.current) {
       formRef.current.scrollIntoView({
@@ -51,30 +49,39 @@ export default function MantineContactForm(props) {
     if (checkRegisteredInputs()) {
       setSubmitting(true);
 
-      fetch(`${props.url}/public-api/forms/${props.id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json'
-        },
-        body: JSON.stringify({
-          ...values,
-          ...FormRegistry.getAll()
-        })
-      }).then(async (resp) => {
-        if (resp.status === 200) {
+      const submitFunction = props.handler ? props.handler(values) :
+        fetch(`${props.url}/public-api/forms/${props.id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+          },
+          body: JSON.stringify({
+            ...values,
+            ...FormRegistry.getAll()
+          })
+        });
+
+      submitFunction.then(async (resp) => {
+        if (resp.success || resp.status === 200) {
           form.reset();
           FormRegistry.resetAll();
           setSuccess(true);
         } else {
-          const body = await resp.json();
-          setError(body.title || 'An error occurred, please try again later');
+          const err = props.handler ? resp.error : (await resp.json()).title;
+          setError(err || 'An error occurred, please try again later');
         }
       }).catch((e) => {
         setError(`An error occurred, please try again later. ${e}`);
       }).finally(() => {
         setSubmitting(false);
-        scrollToFormTop();
+        if (props.afterSubmit) {
+          props.afterSubmit(() => {
+            scrollToFormTop();
+          });
+        } else {
+          scrollToFormTop();
+        }
       });
     }
   }
