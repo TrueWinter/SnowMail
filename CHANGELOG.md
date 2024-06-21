@@ -2,6 +2,19 @@
 
 _This changelog follows the [Common Changelog](https://common-changelog.org/) conventions._
 
+## [0.3.0] - 2024-06-21
+
+### Changed
+
+- Form metadata is now hidden behind a warning to encourage use of input settings forms
+
+### Added
+
+- Plugins can now attach setting forms to custom inputs. You will need to remove and re-add custom inputs for the settings button to show.
+- Added description field to text inputs
+- **NPM package**: Added `handler`, `onChange`, and `onSubmit` functions to the form components to allow for custom submission handling
+- **NPM package**: Added `defaults` property
+
 ## [0.2.0] - 2024-06-19
 
 ### Changed
