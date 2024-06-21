@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { render } from 'preact-render-to-string';
 import { makeForm } from '.';
 

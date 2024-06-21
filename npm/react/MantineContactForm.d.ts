@@ -11,7 +11,9 @@ export interface MantineContactFormProps {
   url: string
   id: string
   inputs?: InputUnion[]
+  defaults?: Record<string, any>
   handler?: (values: Record<string, any>) => Promise<HandlerReturnValue>
+  onChange?: (values: Record<string, any>) => void
   afterSubmit?: (scroll: () => void) => void
 }
 

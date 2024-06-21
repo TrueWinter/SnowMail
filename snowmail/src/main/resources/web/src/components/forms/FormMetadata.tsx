@@ -1,13 +1,10 @@
-import { type Dispatch, type SetStateAction } from 'react';
+import { useContext } from 'react';
 import KeyValueInputs from './KeyValueInputs';
 import { type KV } from './KeyValueInput';
+import { MetadataContext } from './context/MetadataContext';
 
-export interface FormMetadataProps {
-  metadata: KV[]
-  setMetadata: Dispatch<SetStateAction<KV[]>>
-}
-
-export default function FormMetadata({ metadata, setMetadata }: FormMetadataProps) {
+export default function FormMetadata() {
+  const { metadata, setMetadata } = useContext(MetadataContext);
   function change(m: KV[]) {
     setMetadata(m);
   }

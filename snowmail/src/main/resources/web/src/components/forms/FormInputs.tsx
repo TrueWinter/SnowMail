@@ -33,6 +33,7 @@ export default function FormInputs({ add, customInputs }: Props) {
   );
 }
 
+// The custom inputs is passed here as Mantine's modal manager doesn't support dynamic data
 export function openModal(add: AddFunction, customInputs: InputUnion[]) {
   modals.open({
     title: 'Inputs',

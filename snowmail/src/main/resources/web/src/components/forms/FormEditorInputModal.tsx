@@ -53,12 +53,12 @@ function StylableInputFields({ input, set }: FormFieldProps<StylableInput>) {
     <Fieldset legend="Styling">
       <Stack>
         <Checkbox label="Unstyled" description="If checked, the default styles will not be applied"
-          {...form.getInputProps('unstyled', { type: 'checkbox' })} />
+          {...form.getInputProps('unstyled', { type: 'checkbox' })} key={form.key('unstyled')} />
         <Fieldset legend="CSS Styles">
           <KeyValueInputs current={styles} onChange={setStyles} />
         </Fieldset>
         <TagsInput label="CSS Classes" splitChars={[',', ' ']}
-          {...form.getInputProps('cssClasses')} />
+          {...form.getInputProps('cssClasses')} key={form.key('cssClasses')} />
       </Stack>
     </Fieldset>
   );
@@ -74,6 +74,7 @@ function TextInputFields({ input, set, children }: TextInputFieldsProps) {
       required: input.required,
       includedInEmail: input.includedInEmail,
       label: input.label,
+      description: input.description,
       name: input.name,
       placeholder: input.placeholder,
       maxLength: input.maxLength || null,
@@ -92,12 +93,14 @@ function TextInputFields({ input, set, children }: TextInputFieldsProps) {
   return (
     <>
       <Group justify="space-evenly">
-        <Checkbox label="Required" {...form.getInputProps('required', { type: 'checkbox' })} />
+        <Checkbox label="Required" {...form.getInputProps('required', { type: 'checkbox' })}
+          key={form.key('required')} />
         <Checkbox label="Included In Email"
-          {...form.getInputProps('includedInEmail', { type: 'checkbox' })} />
+          {...form.getInputProps('includedInEmail', { type: 'checkbox' })}
+          key={form.key('includedInEmail')} />
       </Group>
       <TextInput label="Label" description="The label shown in the form, in errors, and in emails"
-        required {...form.getInputProps('label')} />
+        required {...form.getInputProps('label')} key={form.key('label')} />
       <TextInput label="Name"
         /*
           Using span here as a paragraph element is used by default which results
@@ -115,14 +118,19 @@ function TextInputFields({ input, set, children }: TextInputFieldsProps) {
         descriptionProps={{
           component: 'span'
         }}
-        required {...form.getInputProps('name')} />
-      <TextInput label="Placeholder" {...form.getInputProps('placeholder')} />
-      <NumberInput label="Max Length" {...form.getInputProps('maxLength')} />
+        required {...form.getInputProps('name')} key={form.key('name')} />
+      <TextInput label="Description" {...form.getInputProps('description')}
+        key={form.key('description')} />
+      <TextInput label="Placeholder" {...form.getInputProps('placeholder')}
+        key={form.key('placeholder')} />
+      <NumberInput label="Max Length" {...form.getInputProps('maxLength')}
+        key={form.key('maxLength')} />
       {children}
       <Checkbox label="Ignored On Client" description="If checked, the field will not be
         automatically added by SnowMail, but will be validated by the server. This is useful for
         third-party scripts like captchas."
-        {...form.getInputProps('ignoredOnClient', { type: 'checkbox' })} />
+        {...form.getInputProps('ignoredOnClient', { type: 'checkbox' })}
+        key={form.key('ignoredOnClient')} />
       <StylableInputFields input={input} set={set} />
     </>
   );
@@ -164,14 +172,15 @@ const fields: FormFields = {
     return (
       <>
         <TextInputFields set={set} input={input}>
-          <NativeSelect label="Type" data={textTypes} {...form.getInputProps('type')} />
+          <NativeSelect label="Type" data={textTypes} {...form.getInputProps('type')}
+            key={form.key('type')} />
           <TextInput label="Pattern"
             description="A regular expression that the input value will be validated against"
-            placeholder="^.+$" {...form.getInputProps('pattern')} />
+            placeholder="^.+$" {...form.getInputProps('pattern')} key={form.key('pattern')} />
           <TextInput label="Pattern Error"
             description="The error message that is shown if the user enters an invalid value"
             placeholder="Value does not match required pattern"
-            {...form.getInputProps('patternError')} />
+            {...form.getInputProps('patternError')} key={form.key('patternError')} />
         </TextInputFields>
         <CommonFields input={input} set={set} />
       </>
@@ -194,7 +203,7 @@ const fields: FormFields = {
     return (
       <>
         <TextInputFields input={input} set={set}>
-          <NumberInput label="Rows" {...form.getInputProps('rows')} />
+          <NumberInput label="Rows" {...form.getInputProps('rows')} key={form.key('rows')} />
         </TextInputFields>
         <CommonFields input={input} set={set} />
       </>
@@ -218,8 +227,9 @@ const fields: FormFields = {
 
     return (
       <>
-        <NativeSelect label="Type" data={buttonTypes} {...form.getInputProps('type')} />
-        <TextInput label="Text" {...form.getInputProps('text')} required />
+        <NativeSelect label="Type" data={buttonTypes} {...form.getInputProps('type')}
+          key={form.key('type')} />
+        <TextInput label="Text" {...form.getInputProps('text')} key={form.key('text')} required />
         <StylableInputFields input={input} set={set} />
         <CommonFields input={input} set={set} />
       </>
@@ -245,11 +255,14 @@ const fields: FormFields = {
 
     return (
       <>
-        <TextInput label="URL" required {...form.getInputProps('src')} />
+        <TextInput label="URL" required {...form.getInputProps('src')} key={form.key('src')} />
         <Group justify="space-evenly">
-          <Checkbox label="Defer" {...form.getInputProps('defer', { type: 'checkbox' })} />
-          <Checkbox label="Async" {...form.getInputProps('async', { type: 'checkbox' })} />
-          <Checkbox label="Module" {...form.getInputProps('module', { type: 'checkbox' })} />
+          <Checkbox label="Defer" {...form.getInputProps('defer', { type: 'checkbox' })}
+            key={form.key('defer')} />
+          <Checkbox label="Async" {...form.getInputProps('async', { type: 'checkbox' })}
+            key={form.key('async')} />
+          <Checkbox label="Module" {...form.getInputProps('module', { type: 'checkbox' })}
+            key={form.key('module')} />
         </Group>
         <CommonFields input={input} set={set} />
       </>
@@ -334,8 +347,10 @@ const fields: FormFields = {
 
     return (
       <>
-        <TextInput label="Element" {...form.getInputProps('type')} required />
-        <Textarea label="Inner HTML" {...form.getInputProps('innerHtml')} resize="vertical" />
+        <TextInput label="Element" {...form.getInputProps('type')}
+          key={form.key('type')} required />
+        <Textarea label="Inner HTML" {...form.getInputProps('innerHtml')}
+          key={form.key('innerHtml')} resize="vertical" />
         <CommonFields input={input} set={set} />
       </>
     );

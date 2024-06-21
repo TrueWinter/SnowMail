@@ -26,6 +26,9 @@ import ContactForm from '../../../../astro/ContactForm.astro';
 	  <ContactForm url="http://localhost:8025" id="6627b0113f4c7e0d773abc2b" providerProps={{
       defaultColorScheme: 'dark'
     }}
+    defaults={{
+      name: 'Test'
+    }}
     handler={async function (values) {
       console.log(values);
 
@@ -36,6 +39,9 @@ import ContactForm from '../../../../astro/ContactForm.astro';
     afterSubmit={function (scroll) {
       console.log('submitted');
       scroll();
+    }}
+    onChange={function (values) {
+      console.log(values);
     }} ssr />
   </div>
 </Layout>

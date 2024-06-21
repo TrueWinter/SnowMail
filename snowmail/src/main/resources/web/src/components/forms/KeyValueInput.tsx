@@ -48,11 +48,11 @@ export default function KeyValueInput({ current, onChange, del, pattern }: Props
 
   return (
     <Flex direction="row" gap="sm">
-      <TextInput placeholder="Key" defaultValue={current.key} ref={keyRef}
-        onKeyUp={onKeyUp} required pattern={pattern}
+      <TextInput placeholder="Key" value={current.key} ref={keyRef}
+        onChange={onKeyUp} required pattern={pattern}
         error={current.key && !current.key.match(pattern) && `Key must match pattern ${pattern}`} />
-      <TextInput placeholder="Value" defaultValue={current.value} ref={valueRef}
-        onKeyUp={onKeyUp} required />
+      <TextInput placeholder="Value" value={current.value} ref={valueRef}
+        onChange={onKeyUp} required />
       <ActionIcon color="red" size="lg" onClick={showDeleteModal}>
         <IconTrash />
       </ActionIcon>

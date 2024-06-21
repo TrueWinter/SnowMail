@@ -1,21 +1,10 @@
 import type { DraggableProvided, DraggableStateSnapshot } from '@hello-pangea/dnd';
-import { ActionIcon, Button, Card, Group, Modal, ScrollArea, Text } from '@mantine/core';
-import { IconEdit, IconGripVertical, IconTrash } from '@tabler/icons-react';
-import { useDisclosure } from '@mantine/hooks';
+import { ActionIcon, Card, Group } from '@mantine/core';
+import { IconEdit, IconGripVertical, IconSettings, IconTrash } from '@tabler/icons-react';
 import type { InputUnion } from '#types/java';
-import FormEditorInputModal from './FormEditorInputModal';
-import { toTitleCase } from '../../util/text';
 import FormEditorInputText from './FormEditorInputText';
 
-interface ModalProps {
-  id: string
-  state: InputUnion[]
-  onClose: () => void;
-  // eslint-disable-next-line no-unused-vars
-  remove: (key: string) => void
-}
-
-function find(key: string, data: InputUnion[]) {
+export function find(key: string, data: InputUnion[]): InputUnion | null {
   // eslint-disable-next-line no-restricted-syntax
   for (const input of data) {
     if (input.rKey === key) {
@@ -33,58 +22,6 @@ function find(key: string, data: InputUnion[]) {
   return null;
 }
 
-interface EditModalProps extends ModalProps {
-  // eslint-disable-next-line no-unused-vars
-  set: (key: string, changes: object) => void
-}
-
-export function EditModal({ id, state, set, onClose, remove }: EditModalProps) {
-  const [opened, { open, close }] = useDisclosure(false);
-  const input = find(id, state);
-  if (input && !opened) {
-    open();
-  }
-
-  return (
-    <Modal title={`Edit ${toTitleCase(input?.inputType)} Input`} opened={opened} onClose={() => {
-      onClose();
-      close();
-    }} scrollAreaComponent={ScrollArea.Autosize} styles={{
-      // The Multiple input's InputSorter causes overflowing on the content element
-      content: {
-        overflow: 'hidden'
-      }
-    }}>
-      {input && <FormEditorInputModal input={input} set={set} remove={remove} />}
-    </Modal>
-  );
-}
-
-export function DeleteModal({ id, state, onClose, remove }: ModalProps) {
-  const [opened, { open, close }] = useDisclosure(false);
-  const input = find(id, state);
-  if (input && !opened) {
-    open();
-  }
-
-  return (
-    <Modal title="Delete" opened={opened} onClose={() => {
-      onClose();
-      close();
-    }} centered>
-      <Text>Are you sure you want to delete this input?</Text>
-      <Group>
-        <Button onClick={close}>Cancel</Button>
-        <Button onClick={() => {
-          remove(input.rKey);
-          onClose();
-          close();
-        }} color="red">Remove</Button>
-      </Group>
-    </Modal>
-  );
-}
-
 interface Props {
   input: InputUnion
   provided: DraggableProvided
@@ -93,10 +30,12 @@ interface Props {
   openEditModal: (key: string) => void
   // eslint-disable-next-line no-unused-vars
   openDeleteModal: (key: string) => void
+  // eslint-disable-next-line no-unused-vars
+  openSettingsModal: (key: string) => void
 }
 
 export default function FormEditorDraggableInput({ input, provided, snapshot,
-  openEditModal, openDeleteModal }: Props) {
+  openEditModal, openDeleteModal, openSettingsModal }: Props) {
   return (
     <div ref={provided.innerRef} {...provided.draggableProps}>
       <Card withBorder style={{
@@ -115,6 +54,11 @@ export default function FormEditorDraggableInput({ input, provided, snapshot,
           <Group justify="flex-end" style={{
             flexGrow: '1'
           }}>
+            {input.settings.length !== 0 && (
+              <ActionIcon size="lg" onClick={() => openSettingsModal(input.rKey)}>
+                <IconSettings />
+              </ActionIcon>
+            )}
             <ActionIcon size="lg" onClick={() => openEditModal(input.rKey)}>
               <IconEdit />
             </ActionIcon>

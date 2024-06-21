@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public abstract class AbstractTextInput extends Input.StylableInput {
     protected String label;
+    protected String description;
     protected String name;
     protected boolean required;
     protected String placeholder;
@@ -26,6 +27,20 @@ public abstract class AbstractTextInput extends Input.StylableInput {
      */
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    /**
+     * @return The input description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * {@link #getDescription()}
+     */
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**

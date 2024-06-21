@@ -6,6 +6,8 @@ import dev.truewinter.snowmail.api.inputs.ScriptInput;
 import dev.truewinter.snowmail.api.inputs.TextInput;
 import dev.truewinter.snowmail.api.plugin.SnowMailPlugin;
 
+import java.util.LinkedList;
+
 @SuppressWarnings("unused")
 public class SnowCaptcha extends SnowMailPlugin {
     @Override
@@ -17,6 +19,17 @@ public class SnowCaptcha extends SnowMailPlugin {
             throw new RuntimeException(e);
         }
 
+        Input.MultipleInputs inputs = createClientInputs();
+        inputs.getSettings().addAll(createSettingsForm());
+        getApi().registerInput(inputs);
+    }
+
+    @Override
+    protected void onUnload() {
+        getLogger().info("Unloaded plugin");
+    }
+
+    private Input.MultipleInputs createClientInputs() {
         TextInput responseField = new TextInput();
         responseField.setType(TextInput.TextInputTypes.HIDDEN);
         responseField.setName("snowcaptcha");
@@ -92,11 +105,40 @@ public class SnowCaptcha extends SnowMailPlugin {
         inputs.getInputs().add(initScript);
         inputs.getInputs().add(scriptInput);
 
-        getApi().registerInput(inputs);
+        return inputs;
     }
 
-    @Override
-    protected void onUnload() {
-        getLogger().info("Unloaded plugin");
+    private LinkedList<Input> createSettingsForm() {
+        LinkedList<Input> inputs = new LinkedList<>();
+
+        TextInput src = new TextInput();
+        src.setLabel("Script URL");
+        src.setName("snowcaptcha-src");
+        src.setDescription("URL of the SnowCaptcha JavaScript file (e.g. https://snowcaptcha.example.com/build/captcha/captcha.js)");
+        inputs.add(src);
+
+        TextInput host = new TextInput();
+        host.setLabel("Host");
+        host.setName("snowcaptcha-host");
+        host.setDescription("URL of your SnowCaptcha instance (e.g. https://snowcaptcha.example.com");
+        inputs.add(host);
+
+        TextInput sitekey = new TextInput();
+        sitekey.setLabel("Site Key");
+        sitekey.setName("snowcaptcha-sitekey");
+        inputs.add(sitekey);
+
+        TextInput secret = new TextInput();
+        secret.setLabel("Secret Key");
+        secret.setName("snowcaptcha-secret");
+        inputs.add(secret);
+
+        for (Input input : inputs) {
+            if (input instanceof TextInput) {
+                ((TextInput) input).setRequired(true);
+            }
+        }
+
+        return inputs;
     }
 }

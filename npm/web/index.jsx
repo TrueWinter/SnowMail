@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { render as preactRender, hydrate as preactHydrate } from 'preact';
 import ContactForm from '../react/ContactForm';
 
@@ -8,7 +9,8 @@ import ContactForm from '../react/ContactForm';
 export function makeForm(opts) {
   return (
     <ContactForm url={opts.url} id={opts.id} providerProps={opts.providerProps}
-      inputs={opts.inputs} handler={opts.handler} afterSubmit={opts.afterSubmit} />
+      inputs={opts.inputs} handler={opts.handler} afterSubmit={opts.afterSubmit}
+      onChange={opts.onChange} defaults={opts.defaults} />
   );
 }
 

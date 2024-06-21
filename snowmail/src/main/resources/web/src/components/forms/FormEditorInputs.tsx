@@ -1,5 +1,5 @@
 import { ActionIcon, Button, Group, Paper } from '@mantine/core';
-import { UseListState } from '@mantine/hooks/lib/use-list-state/use-list-state';
+import { type UseListState } from '@mantine/hooks/lib/use-list-state/use-list-state';
 import { type UseFormReturnType } from '@mantine/form';
 import { IconPlus } from '@tabler/icons-react';
 import { useContext } from 'react';

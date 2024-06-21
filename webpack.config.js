@@ -19,8 +19,16 @@ const dashboard = {
   },
   module: {
     rules: [{
-      test: /\.tsx?$/,
-      loader: 'babel-loader'
+      test: /\.(j|t)sx?$/,
+      loader: 'babel-loader',
+      // It should work without specifying the options here, but it doesn't
+      options: {
+        presets: [
+          '@babel/preset-env',
+          '@babel/preset-react',
+          '@babel/preset-typescript'
+        ]
+      }
     }, {
       test: /\.css$/,
       use: [

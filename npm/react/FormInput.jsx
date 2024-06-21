@@ -60,6 +60,7 @@ function createStylableInputProps(input) {
 function createAbstractTextInputProps(input) {
   return {
     label: input.label || undefined,
+    description: input.description,
     required: input.required || undefined,
     name: input.name || undefined,
     maxLength: input.maxLength || undefined,

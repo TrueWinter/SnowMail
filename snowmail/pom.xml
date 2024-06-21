@@ -85,17 +85,17 @@
                         </configuration>
                     </execution>
                     <!-- Install in npm directory -->
-                    <execution>
+                    <!--<execution>
                         <id>npm-install-npm</id>
                         <goals>
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>install --include=dev</arguments>
+                            <arguments>install \-\-include=dev</arguments>
                             <workingDirectory>../npm</workingDirectory>
                             <installDirectory>../snowmail</installDirectory>
                         </configuration>
-                    </execution>
+                    </execution>-->
                     <!-- Build -->
                     <execution>
                         <id>webpack-build</id>

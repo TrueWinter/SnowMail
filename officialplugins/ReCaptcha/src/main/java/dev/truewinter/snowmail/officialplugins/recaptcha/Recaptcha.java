@@ -6,6 +6,8 @@ import dev.truewinter.snowmail.api.inputs.ScriptInput;
 import dev.truewinter.snowmail.api.inputs.TextInput;
 import dev.truewinter.snowmail.api.plugin.SnowMailPlugin;
 
+import java.util.LinkedList;
+
 public class Recaptcha extends SnowMailPlugin {
     @Override
     protected void onLoad() {
@@ -15,6 +17,20 @@ public class Recaptcha extends SnowMailPlugin {
             throw new RuntimeException(e);
         }
 
+
+        Input.MultipleInputs inputs = createClientInputs();
+        inputs.getSettings().addAll(createSettingsForm());
+        getApi().registerInput(inputs);
+
+        getLogger().info("Loaded plugin");
+    }
+
+    @Override
+    protected void onUnload() {
+        getLogger().info("Unloaded plugin");
+    }
+
+    private Input.MultipleInputs createClientInputs() {
         TextInput responseField = new TextInput();
         responseField.setType(TextInput.TextInputTypes.HIDDEN);
         responseField.setName("g-recaptcha-response");
@@ -81,13 +97,28 @@ public class Recaptcha extends SnowMailPlugin {
         inputs.getInputs().add(initScript);
         inputs.getInputs().add(scriptInput);
 
-        getApi().registerInput(inputs);
-
-        getLogger().info("Loaded plugin");
+        return inputs;
     }
 
-    @Override
-    protected void onUnload() {
-        getLogger().info("Unloaded plugin");
+    private LinkedList<Input> createSettingsForm() {
+        LinkedList<Input> inputs = new LinkedList<>();
+
+        TextInput sitekey = new TextInput();
+        sitekey.setLabel("Site Key");
+        sitekey.setName("recaptcha-sitekey");
+        inputs.add(sitekey);
+
+        TextInput secret = new TextInput();
+        secret.setLabel("Secret Key");
+        secret.setName("recaptcha-secret");
+        inputs.add(secret);
+
+        for (Input input : inputs) {
+            if (input instanceof TextInput) {
+                ((TextInput) input).setRequired(true);
+            }
+        }
+
+        return inputs;
     }
 }

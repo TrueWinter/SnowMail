@@ -3,7 +3,10 @@ import { DragDropContext, Draggable, DraggableChildrenFn, Droppable } from '@hel
 import { UseListState } from '@mantine/hooks/lib/use-list-state/use-list-state';
 import { useState } from 'react';
 import type { InputUnion } from '#types/java';
-import FormEditorDraggableInput, { DeleteModal, EditModal } from './FormEditorDraggableInput';
+import FormEditorDraggableInput from './FormEditorDraggableInput';
+import { DeleteModal } from './modals/DeleteModal';
+import { EditModal } from './modals/EditModal';
+import SettingsModal from './modals/SettingsModal';
 
 interface Props {
   id: string
@@ -18,6 +21,7 @@ export default function FormEditorInputSorter({ id, data, set, remove }: Props) 
   const [state, handlers] = data;
   const [editModalKey, setEditModalKey] = useState<string>(null);
   const [deleteModalKey, setDeleteModalKey] = useState<string>(null);
+  const [settingsModalKey, setSettingsModalKey] = useState<string>(null);
 
   const getRenderItem = (items: InputUnion[]):
   // eslint-disable-next-line react/function-component-definition, react/no-unstable-nested-components
@@ -27,7 +31,8 @@ export default function FormEditorInputSorter({ id, data, set, remove }: Props) 
     return (
       <FormEditorDraggableInput input={item} provided={provided} snapshot={snapshot}
         openEditModal={(key) => setEditModalKey(key)}
-        openDeleteModal={(key) => setDeleteModalKey(key)} />
+        openDeleteModal={(key) => setDeleteModalKey(key)}
+        openSettingsModal={(key) => setSettingsModalKey(key)} />
     );
   };
 
@@ -39,6 +44,9 @@ export default function FormEditorInputSorter({ id, data, set, remove }: Props) 
         onClose={() => setEditModalKey(null)} set={set} remove={remove} />
       <DeleteModal id={deleteModalKey} state={state}
         onClose={() => setDeleteModalKey(null)} remove={remove} />
+      <SettingsModal id={settingsModalKey} state={state}
+        onClose={() => setSettingsModalKey(null)} />
+
       <DragDropContext onDragEnd={({ destination, source }) =>
         // eslint-disable-next-line implicit-arrow-linebreak
         handlers.reorder({ from: source.index, to: destination?.index })}>

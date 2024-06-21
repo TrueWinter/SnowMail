@@ -1,19 +1,21 @@
 /**
  * @param {import('../types/public').InputUnion[]} inputs
+ * @param {(values: Record<string, any>) => void} onChange
  * @returns {import('@mantine/form').UseFormInput}
  */
-export default function createForm(inputs) {
+export default function createForm(inputs, onChange = () => {}, defaults = {}) {
   /** @type {import('@mantine/form').UseFormInput} */
   const form = {
     mode: 'uncontrolled',
     initialValues: {},
     validate: {},
-    validateInputOnChange: true
+    validateInputOnChange: true,
+    onValuesChange: onChange
   };
 
   inputs.forEach((input) => {
     if (['TEXT', 'TEXTAREA'].includes(input.inputType) && !input.ignoredOnClient) {
-      form.initialValues[input.name] = '';
+      form.initialValues[input.name] = defaults[input.name] || '';
 
       form.validate[input.name] = (/** @type {string} */ v) => {
         if (input.required && !v) {

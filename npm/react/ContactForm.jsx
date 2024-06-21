@@ -14,7 +14,8 @@ import '@mantine/core/styles/Input.css';
 import '@mantine/core/styles/Alert.css';
 
 /** @param {import('./ContactForm').ContactFormProps} props */
-export default function ContactForm({ url, id, inputs, handler, afterSubmit, providerProps = {} }) {
+export default function ContactForm({ url, id, inputs, handler, afterSubmit,
+  onChange, providerProps = {}, defaults }) {
   /** @type {import('@mantine/core').MantineProviderProps} */
   const providerPropsWithDefaults = {
     withStaticClasses: false,
@@ -24,7 +25,7 @@ export default function ContactForm({ url, id, inputs, handler, afterSubmit, pro
   return (
     <MantineProvider {...providerPropsWithDefaults}>
       <MantineContactForm url={url} id={id} inputs={inputs} handler={handler}
-        afterSubmit={afterSubmit} />
+        afterSubmit={afterSubmit} onChange={onChange} defaults={defaults} />
     </MantineProvider>
   );
 }

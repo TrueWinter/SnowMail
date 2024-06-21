@@ -6,14 +6,14 @@ import FormInput from './FormInput';
 import createForm from './createForm';
 import * as FormRegistry from './FormRegistry';
 
-/** @param {import('./ContactForm').ContactFormProps} props */
+/** @param {import('./MantineContactForm').MantineContactFormProps} props */
 export default function MantineContactForm(props) {
   /** @type {[import('../types/public').InputUnion[], import('react').Dispatch<import('react').SetStateAction<import('../types/public').InputUnion[]>]} */
   const [formState, setFormState] = useState(props.inputs || []);
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
-  const form = useForm(createForm(formState));
+  const form = useForm(createForm(formState, props.onChange, props.defaults));
   /** @type {import('react').MutableRefObject<HTMLFormElement>} */
   const formRef = useRef(null);
 

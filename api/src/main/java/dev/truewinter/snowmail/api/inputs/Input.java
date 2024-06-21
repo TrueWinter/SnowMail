@@ -33,6 +33,8 @@ public abstract class Input {
     @JsonView(Views.DashboardFull.class)
     private String customDisplayName;
     private Map<String, String> customAttributes = new HashMap<>();
+    @JsonView(Views.DashboardFull.class)
+    private LinkedList<Input> settings = new LinkedList<>();
 
     /**
      * @apiNote You probably shouldn't be using this directly. Instead, use the instanceof keyword.
@@ -68,6 +70,13 @@ public abstract class Input {
      */
     public Map<String, String> getCustomAttributes() {
         return customAttributes;
+    }
+
+    /**
+     * @return A LinkedList of Inputs for configuring metadata
+     */
+    public LinkedList<Input> getSettings() {
+        return settings;
     }
 
     /**

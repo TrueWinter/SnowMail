@@ -16,6 +16,7 @@ import { type KV } from './KeyValueInput';
 import { serialize, serializeInputs } from '../../util/forms';
 import { get, post, put } from '../../util/api';
 import { CustomInputContext } from './context/CustomInputContext';
+import { MetadataContext } from './context/MetadataContext';
 
 function Burger(props: PolymorphicComponentProps<'span', ButtonProps>) {
   const computedColorSchme = useComputedColorScheme('dark');
@@ -189,32 +190,37 @@ export default function FormEditor({ form }: Props) {
 
   return (
     <CustomInputContext.Provider value={customInputs}>
-      <LoadingOverlay visible={submitting} />
-      <Grid h="100%" overflow="hidden" gutter="0" styles={{
-        inner: {
-          height: '100%'
-        },
-        col: {
-          height: '100%'
-        }
+      {/* eslint-disable-next-line react/jsx-no-constructed-context-values */}
+      <MetadataContext.Provider value={{
+        metadata,
+        setMetadata
       }}>
-        <Grid.Col span={{ md: 9, xs: 12 }}>
-          <Container h="100%" p="sm" mx={{ md: 'xl' }} fluid>
-            <ScrollArea.Autosize h="100%" scrollbars="y">
-              <Burger hiddenFrom="md" onClick={() => propertiesRef.current?.open()}
-                w="100%">Properties</Burger>
-              <Title mb="sm">{form ? 'Edit' : 'Create'} Form</Title>
-              <FormEditorInputs data={[state, handlers]} remove={remove}
-                set={set} propertiesForm={propertiesForm} submit={save} />
-            </ScrollArea.Autosize>
-          </Container>
-        </Grid.Col>
+        <LoadingOverlay visible={submitting} />
+        <Grid h="100%" overflow="hidden" gutter="0" styles={{
+          inner: {
+            height: '100%'
+          },
+          col: {
+            height: '100%'
+          }
+        }}>
+          <Grid.Col span={{ md: 9, xs: 12 }}>
+            <Container h="100%" p="sm" mx={{ md: 'xl' }} fluid>
+              <ScrollArea.Autosize h="100%" scrollbars="y">
+                <Burger hiddenFrom="md" onClick={() => propertiesRef.current?.open()}
+                  w="100%">Properties</Burger>
+                <Title mb="sm">{form ? 'Edit' : 'Create'} Form</Title>
+                <FormEditorInputs data={[state, handlers]} remove={remove}
+                  set={set} propertiesForm={propertiesForm} submit={save} />
+              </ScrollArea.Autosize>
+            </Container>
+          </Grid.Col>
 
-        <Sidebar title="Properties" position="right" ref={propertiesRef}>
-          <FormProperties propertiesForm={propertiesForm} metadata={metadata}
-            setMetadata={setMetadata} />
-        </Sidebar>
-      </Grid>
+          <Sidebar title="Properties" position="right" ref={propertiesRef}>
+            <FormProperties propertiesForm={propertiesForm} />
+          </Sidebar>
+        </Grid>
+      </MetadataContext.Provider>
     </CustomInputContext.Provider>
   );
 }
