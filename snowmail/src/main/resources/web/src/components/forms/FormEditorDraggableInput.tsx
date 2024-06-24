@@ -54,7 +54,7 @@ export default function FormEditorDraggableInput({ input, provided, snapshot,
           <Group justify="flex-end" style={{
             flexGrow: '1'
           }}>
-            {input.settings.length !== 0 && (
+            {input.settings && input.settings.length !== 0 && (
               <ActionIcon size="lg" onClick={() => openSettingsModal(input.rKey)}>
                 <IconSettings />
               </ActionIcon>

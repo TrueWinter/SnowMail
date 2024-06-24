@@ -2,6 +2,13 @@
 
 _This changelog follows the [Common Changelog](https://common-changelog.org/) conventions._
 
+## [0.3.1] - 2024-06-24
+
+### Fixed
+
+- Fixed a bug that prevented adding new inputs to forms
+- Fixed input settings form not working for some inputs
+
 ## [0.3.0] - 2024-06-21
 
 ### Changed

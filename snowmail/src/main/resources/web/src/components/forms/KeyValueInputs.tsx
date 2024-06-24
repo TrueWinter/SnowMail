@@ -11,15 +11,19 @@ interface Props {
   pattern?: string
 }
 
+export function getNew() {
+  return {
+    id: uuid(),
+    key: '',
+    value: ''
+  };
+}
+
 export default function KeyValueInputs({ current, onChange, pattern }: Props) {
   function addInput() {
     onChange([
       ...current,
-      {
-        id: uuid(),
-        key: '',
-        value: ''
-      }
+      getNew()
     ]);
   }
 

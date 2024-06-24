@@ -90,7 +90,6 @@ export default function FormEditor({ form }: Props) {
       }
     }
 
-    // TODO: Add this to inputs
     get('/api/custom-inputs').then((d) => {
       setCustomInputs(d.body.inputs);
     });
