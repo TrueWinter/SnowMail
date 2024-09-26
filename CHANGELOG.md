@@ -2,6 +2,13 @@
 
 _This changelog follows the [Common Changelog](https://common-changelog.org/) conventions._
 
+## [0.3.2] = 2024-09-26
+
+### Added
+
+- Added help tooltip to CSS classes input
+- Static assets are now cached
+
 ## [0.3.1] - 2024-06-24
 
 ### Fixed
