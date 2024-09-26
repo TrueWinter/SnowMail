@@ -15,6 +15,7 @@ import type { ButtonInputTypes, TextInputTypes, AbstractTextInput, InputUnion,
 import FormEditorInputSorter from './FormEditorInputSorter';
 import { openModal } from './FormInputs';
 import { CustomInputContext } from './context/CustomInputContext';
+import LabelWithHelpIcon from '../LabelWithHelpIcon';
 
 interface FormFieldProps<T = InputUnion> {
   input: T
@@ -57,7 +58,12 @@ function StylableInputFields({ input, set }: FormFieldProps<StylableInput>) {
         <Fieldset legend="CSS Styles">
           <KeyValueInputs current={styles} onChange={setStyles} />
         </Fieldset>
-        <TagsInput label="CSS Classes" splitChars={[',', ' ']}
+        <TagsInput
+          label={(
+            <LabelWithHelpIcon label="CSS Classes"
+              tooltip="Type a comma or space to add class" />
+            )}
+          splitChars={[',', ' ']}
           {...form.getInputProps('cssClasses')} key={form.key('cssClasses')} />
       </Stack>
     </Fieldset>
