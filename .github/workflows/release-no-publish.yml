@@ -2,6 +2,8 @@
 # This is required because Maven Central won't allow a release to be republished with the same version
 name: Publish Release on GitHub only, do not publish to Docker Hub or Maven Central
 
+on: workflow_dispatch
+
 jobs:
   build:
     runs-on: ubuntu-latest
