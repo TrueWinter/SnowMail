@@ -3,6 +3,7 @@ import { TextInput as MantineTextInput, Text, Textarea, Button as MantineButton,
 import { useEffect } from 'react';
 
 function reactifyStyleName(str) {
+  if (str.startsWith('-')) return str;
   return str.replace(/-./g, (x) => x[1].toUpperCase());
 }
 
