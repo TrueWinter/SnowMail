@@ -2,7 +2,7 @@
 
 _This changelog follows the [Common Changelog](https://common-changelog.org/) conventions._
 
-## [0.3.2] = 2024-09-26
+## [0.3.2] - 2024-09-26
 
 ### Added
 
