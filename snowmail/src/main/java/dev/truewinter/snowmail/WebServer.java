@@ -62,7 +62,12 @@ public class WebServer extends Thread {
             config.showJavalinBanner = false;
             // In development, the dist folder is empty which prevents it from being included as a resource
             if (getClass().getResource("/web/dist") != null) {
-                config.staticFiles.add("/web/dist");
+                config.staticFiles.add(s -> {
+                    s.hostedPath = "/assets";
+                    s.directory = "/web/dist";
+                    // Javalin ignores the cache headers in the before handler if the header exists here
+                    s.headers.remove(Header.CACHE_CONTROL);
+                });
             }
             config.fileRenderer(new JavalinPebble(pebbleEngine.build()));
             config.spaRoot.addHandler("/", ctx -> {
@@ -83,7 +88,16 @@ public class WebServer extends Thread {
         server.start(Config.getInstance().getPort());
 
         server.before(ctx -> {
+            ctx.header("X-Robots-Tag", "noindex");
+
             String path = ctx.path();
+            if (path.startsWith("/assets/") && !path.equals("/assets/main.js")) {
+                ctx.header(Header.CACHE_CONTROL, "public, max-age=604800, immutable");
+            } else {
+                ctx.header(Header.CACHE_CONTROL, "no-cache, no-store, must-revalidate");
+                ctx.header(Header.EXPIRES, "0");
+            }
+
             if (path.startsWith("/public-api")) {
                 ctx.header("Access-Control-Allow-Origin", "*");
                 return;

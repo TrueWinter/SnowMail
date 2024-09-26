@@ -4,14 +4,15 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const CopyPlugin = require('copy-webpack-plugin');
 
 /** @type {import('webpack').Configuration} */
 const dashboard = {
   entry: './snowmail/src/main/resources/web/src/index.tsx',
   output: {
     path: path.resolve(__dirname, 'snowmail', 'src', 'main', 'resources', 'web', 'dist'),
-    clean: true
+    publicPath: '/assets/',
+    clean: true,
+    chunkFilename: '[name].[contenthash].js'
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.scss', '.sass'],
@@ -57,20 +58,30 @@ const dashboard = {
     }]
   },
   optimization: {
+    splitChunks: {
+      hidePathInfo: true,
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          enforce: true,
+          name: 'vendor',
+          filename: '[name].[contenthash].js',
+          reuseExistingChunk: true
+        }
+      },
+      maxSize: 50000
+    },
     minimizer: [
       new TerserPlugin(),
       new CssMinimizerPlugin()
     ]
   },
   plugins: [
-    new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash].css'
+    }),
     new ProvidePlugin({
       React: 'react'
-    }),
-    new CopyPlugin({
-      patterns: [
-        'snowmail/src/main/resources/web/src/snowmail-icon.png'
-      ]
     })
   ]
 };
