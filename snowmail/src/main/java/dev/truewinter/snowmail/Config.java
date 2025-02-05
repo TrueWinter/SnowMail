@@ -9,6 +9,7 @@ public class Config {
     private final String mongodb;
     private final int port;
     private final String emailFrom;
+    private final String returnPath;
     private final String smtpHost;
     private final int smtpPort;
     private final SMTP_ENCRYPTION smtpEncryption;
@@ -30,6 +31,7 @@ public class Config {
         this.mongodb = dotenv.get("MONGO_DB");
         this.port = Integer.parseInt(dotenv.get("PORT", "8025"));
         this.emailFrom = dotenv.get("EMAIL_FROM");
+        this.returnPath = dotenv.get("RETURN_PATH");
         this.smtpHost = dotenv.get("SMTP_HOST");
         this.smtpPort = Integer.parseInt(dotenv.get("SMTP_PORT", "25"));
         this.smtpEncryption = SMTP_ENCRYPTION.valueOf(dotenv.get("SMTP_ENCRYPTION", SMTP_ENCRYPTION.NONE.name()));
@@ -73,6 +75,10 @@ public class Config {
 
     public String getEmailFrom() {
         return emailFrom;
+    }
+
+    public String getReturnPath() {
+        return returnPath;
     }
 
     public String getSmtpHost() {

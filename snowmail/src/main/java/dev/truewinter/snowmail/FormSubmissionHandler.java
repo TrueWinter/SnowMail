@@ -81,6 +81,11 @@ public class FormSubmissionHandler {
         properties.put("mail.smtp.host", config.getSmtpHost());
         properties.put("mail.smtp.port", config.getSmtpPort());
 
+        String returnPath = config.getReturnPath();
+        if (returnPath != null) {
+            properties.put("mail.smtp.from", returnPath);
+        }
+
         switch (config.getSmtpEncryption()) {
             case SSL:
                 properties.put("mail.smtp.socketFactory.port", config.getSmtpPort());
