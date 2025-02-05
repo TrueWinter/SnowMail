@@ -2,6 +2,12 @@
 
 _This changelog follows the [Common Changelog](https://common-changelog.org/) conventions._
 
+## [0.3.3] - 2025-02-05
+
+### Added
+
+- The Return-Path header can now be customized by setting a `RETURN_PATH` environmental variable
+
 ## [0.3.2] - 2024-09-26
 
 ### Added
